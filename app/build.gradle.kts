@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui)
 
     implementation(libs.mapbox)
+//    implementation(libs.mapbox.annotation)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
