@@ -7,13 +7,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import fr.vpm.changingtables.R
 import fr.vpm.changingtables.databinding.FragmentHomeBinding
+import fr.vpm.changingtables.models.Business
 import fr.vpm.changingtables.ui.tools.MapUtils
 
 class HomeFragment : Fragment() {
@@ -23,6 +26,8 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    val gson = Gson().newBuilder().create()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,11 +49,15 @@ class HomeFragment : Fragment() {
         val pointAnnotationManager = annotationApi.createPointAnnotationManager()
         pointAnnotationManager.addClickListener(
             OnPointAnnotationClickListener {
-                Snackbar.make(
-                    requireView(),
-                    "JJ Bean Cambie\n✅ has a changing table",
-                    Snackbar.LENGTH_LONG
-                ).show()
+                it.getData()?.let {
+                    val business = gson.fromJson(it, Business::class.java)
+                    // TODO display the marker's data
+                    Snackbar.make(
+                        requireView(),
+                        "${business?.name}\n✅ has a changing table ${business.hasChangingTable}",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
                 true
             }
         )
@@ -68,19 +77,7 @@ class HomeFragment : Fragment() {
 //            .withDraggable(true)
 //        pointAnnotation = create(pointAnnotationOptions)
 
-        val greenChangingTable =
-            MapUtils().bitmapFromDrawableRes(
-                requireContext(),
-                R.drawable.baby_changing_station_green_24
-            )
-        // create nearby symbols
-        val nearbyOptions: PointAnnotationOptions = PointAnnotationOptions()
-            .withPoint(Point.fromLngLat(-123.1154027480853, 49.2551275385386))
-            .withIconImage(greenChangingTable)
-            .withIconSize(1.0)
-            .withSymbolSortKey(5.0)
-//            .withDraggable(true)
-        pointAnnotationManager.create(nearbyOptions)
+        drawMarkers(pointAnnotationManager)
 
         // random add symbols across the globe
 //        val pointAnnotationOptionsList = List(25) {
@@ -101,6 +98,30 @@ class HomeFragment : Fragment() {
 //            }
 //            create(featureCollection)
 //        }
+    }
+
+    private fun drawMarkers(pointAnnotationManager: PointAnnotationManager) {
+        val greenChangingTable =
+            MapUtils().bitmapFromDrawableRes(
+                requireContext(),
+                R.drawable.baby_changing_station_green_24
+            )
+        val jjBeanCambie = Business().apply {
+            name = "JJ Bean Cambie"
+            longitude = -123.1154027480853
+            latitude = 49.2551275385386
+            hasChangingTable = true
+        }
+
+        // create nearby symbols
+        val nearbyOptions: PointAnnotationOptions = PointAnnotationOptions()
+            .withPoint(Point.fromLngLat(jjBeanCambie.longitude, jjBeanCambie.latitude))
+            .withIconImage(greenChangingTable)
+            .withIconSize(1.0)
+            .withSymbolSortKey(5.0)
+            .withData(gson.toJsonTree(jjBeanCambie))
+        //            .withDraggable(true)
+        pointAnnotationManager.create(nearbyOptions)
     }
 
     override fun onDestroyView() {
