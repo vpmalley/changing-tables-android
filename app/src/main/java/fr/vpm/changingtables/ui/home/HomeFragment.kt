@@ -126,23 +126,22 @@ class HomeFragment : Fragment() {
                 requireContext(),
                 R.drawable.pin_ok_teal_32dp
             )
-        val jjBeanCambie = Business().apply {
+
+        val allBusinessAnnotationOptions = listOf(Business().apply {
             name = "JJ Bean Cambie"
             type = "cafe"
             longitude = -123.1154027480853
             latitude = 49.2551275385386
             hasChangingTable = true
+        }).map { business ->
+            PointAnnotationOptions()
+                .withPoint(Point.fromLngLat(business.longitude, business.latitude))
+                .withIconImage(greenChangingTable)
+                .withIconSize(1.0)
+                .withSymbolSortKey(5.0)
+                .withData(gson.toJsonTree(business))
         }
-
-        // create nearby symbols
-        val nearbyOptions: PointAnnotationOptions = PointAnnotationOptions()
-            .withPoint(Point.fromLngLat(jjBeanCambie.longitude, jjBeanCambie.latitude))
-            .withIconImage(greenChangingTable)
-            .withIconSize(1.0)
-            .withSymbolSortKey(5.0)
-            .withData(gson.toJsonTree(jjBeanCambie))
-        //            .withDraggable(true)
-        pointAnnotationManager.create(nearbyOptions)
+        pointAnnotationManager.create(allBusinessAnnotationOptions)
     }
 
     override fun onDestroyView() {
