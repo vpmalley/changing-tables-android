@@ -124,7 +124,7 @@ class HomeFragment : Fragment() {
         val greenChangingTable =
             MapUtils().bitmapFromDrawableRes(
                 requireContext(),
-                R.drawable.baby_changing_station_green_24
+                R.drawable.pin_ok_teal_32dp
             )
         val jjBeanCambie = Business().apply {
             name = "JJ Bean Cambie"
