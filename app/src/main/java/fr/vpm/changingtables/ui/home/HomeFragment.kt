@@ -1,17 +1,19 @@
 package fr.vpm.changingtables.ui.home
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
+import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.annotations
-import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
@@ -46,29 +48,16 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bottomSheetLayout: LinearLayout? = _binding?.businessBottomSheet?.businessLayout
-        val bottomSheetBehavior =
-            bottomSheetLayout?.let { BottomSheetBehavior.from<LinearLayout?>(bottomSheetLayout) }
-
         val annotationApi = binding.mapView.annotations
         val pointAnnotationManager = annotationApi.createPointAnnotationManager()
-        pointAnnotationManager.addClickListener(
-            OnPointAnnotationClickListener {
-                it.getData()?.let {
-                    val business = gson.fromJson(it, Business::class.java)
-
-                    bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
-                    _binding?.businessBottomSheet?.bottomSheetTitle?.text = business?.name
-                    _binding?.businessBottomSheet?.changingTableDescription?.text =
-                        if (business?.hasChangingTable == true) {
-                            "There is a changing table at this business"
-                        } else {
-                            "No changing table"
-                        }
-                }
-                true
+        pointAnnotationManager.addClickListener { annotation ->
+            val annotationData = annotation.getData()
+            if (annotationData != null) {
+                val business = gson.fromJson(annotationData, Business::class.java)
+                showBusiness(business)
             }
-        )
+            annotationData != null
+        }
 
 //        val airplaneBitmap =
 //            bitmapFromDrawableRes(R.drawable.ic_airplanemode_active_black_24dp)
@@ -108,6 +97,28 @@ class HomeFragment : Fragment() {
 //        }
     }
 
+    private fun showBusiness(business: Business?) {
+        val businessBottomSheet = _binding?.businessBottomSheet
+        val bottomSheetLayout: LinearLayout? = businessBottomSheet?.businessLayout
+        val bottomSheetBehavior =
+            bottomSheetLayout?.let { BottomSheetBehavior.from<LinearLayout?>(bottomSheetLayout) }
+        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        businessBottomSheet?.businessTitle?.text = business?.name
+        businessBottomSheet?.businessDescription?.text = business?.description ?: "Coffee shop"
+        if (business?.hasChangingTable == true) {
+            businessBottomSheet?.changingTableDescription?.let {
+                it.text = "There is a changing table here"
+                TextViewCompat.setCompoundDrawableTintList(
+                    it, ColorStateList.valueOf(
+                        ContextCompat.getColor(requireContext(), R.color.green)
+                    )
+                )
+            }
+        } else {
+            businessBottomSheet?.changingTableDescription?.text = "No changing table"
+        }
+    }
+
     private fun drawMarkers(pointAnnotationManager: PointAnnotationManager) {
         val greenChangingTable =
             MapUtils().bitmapFromDrawableRes(
@@ -116,6 +127,7 @@ class HomeFragment : Fragment() {
             )
         val jjBeanCambie = Business().apply {
             name = "JJ Bean Cambie"
+            type = "cafe"
             longitude = -123.1154027480853
             latitude = 49.2551275385386
             hasChangingTable = true
