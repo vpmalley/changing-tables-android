@@ -99,10 +99,11 @@ class HomeFragment : Fragment() {
 
     private fun showBusiness(business: Business?) {
         val businessBottomSheet = _binding?.businessBottomSheet
+        businessBottomSheet?.businessLayout?.visibility = View.VISIBLE
         val bottomSheetLayout: LinearLayout? = businessBottomSheet?.businessLayout
         val bottomSheetBehavior =
             bottomSheetLayout?.let { BottomSheetBehavior.from<LinearLayout?>(bottomSheetLayout) }
-        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         businessBottomSheet?.businessTitle?.text = business?.name
         businessBottomSheet?.businessDescription?.text = business?.description ?: "Coffee shop"
         if (business?.hasChangingTable == true) {

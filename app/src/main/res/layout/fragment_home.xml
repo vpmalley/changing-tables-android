@@ -28,5 +28,6 @@
 
     <include
         android:id="@+id/businessBottomSheet"
+        android:visibility="gone"
         layout="@layout/business_bottom_sheet" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

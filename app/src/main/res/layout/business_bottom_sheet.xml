@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/business_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="?android:attr/colorBackground"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:padding="@dimen/margin_material"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="70dp"
+    app:behavior_peekHeight="210dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <!-- Optional: Add a drag handle visual cue -->
@@ -51,16 +51,5 @@
         android:gravity="center_vertical"
         android:text="Your detailed business description goes here. It can be multiple lines long."
         android:textAppearance="?attr/textAppearanceBody1" />
-
-    <!-- You can add more views here if needed -->
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="64dp" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="More content can go here and will scroll."
-        android:textColor="@android:color/darker_gray" />
 
 </LinearLayout>
