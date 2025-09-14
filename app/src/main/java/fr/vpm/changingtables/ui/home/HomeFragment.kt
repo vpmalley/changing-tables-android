@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.annotations
@@ -45,18 +46,25 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val bottomSheetLayout: LinearLayout? = _binding?.businessBottomSheet?.businessLayout
+        val bottomSheetBehavior =
+            bottomSheetLayout?.let { BottomSheetBehavior.from<LinearLayout?>(bottomSheetLayout) }
+
         val annotationApi = binding.mapView.annotations
         val pointAnnotationManager = annotationApi.createPointAnnotationManager()
         pointAnnotationManager.addClickListener(
             OnPointAnnotationClickListener {
                 it.getData()?.let {
                     val business = gson.fromJson(it, Business::class.java)
-                    // TODO display the marker's data
-                    Snackbar.make(
-                        requireView(),
-                        "${business?.name}\n✅ has a changing table ${business.hasChangingTable}",
-                        Snackbar.LENGTH_LONG
-                    ).show()
+
+                    bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+                    _binding?.businessBottomSheet?.bottomSheetTitle?.text = business?.name
+                    _binding?.businessBottomSheet?.changingTableDescription?.text =
+                        if (business?.hasChangingTable == true) {
+                            "There is a changing table at this business"
+                        } else {
+                            "No changing table"
+                        }
                 }
                 true
             }
