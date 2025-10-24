@@ -12,11 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
-import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
+import fr.vpm.changingtables.BusinessToPointAnnotation
 import fr.vpm.changingtables.R
 import fr.vpm.changingtables.databinding.FragmentHomeBinding
 import fr.vpm.changingtables.models.Business
@@ -121,7 +120,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun drawMarkers(pointAnnotationManager: PointAnnotationManager) {
-        val greenChangingTable =
+        val greenBusinessMarker =
             MapUtils().bitmapFromDrawableRes(
                 requireContext(),
                 R.drawable.pin_ok_teal_32dp
@@ -134,12 +133,8 @@ class HomeFragment : Fragment() {
             latitude = 49.2551275385386
             hasChangingTable = true
         }).map { business ->
-            PointAnnotationOptions()
-                .withPoint(Point.fromLngLat(business.longitude, business.latitude))
-                .withIconImage(greenChangingTable)
-                .withIconSize(1.0)
-                .withSymbolSortKey(5.0)
-                .withData(gson.toJsonTree(business))
+            BusinessToPointAnnotation().toPointAnnotation(business)
+                .withIconImage(greenBusinessMarker)
         }
         pointAnnotationManager.create(allBusinessAnnotationOptions)
     }
