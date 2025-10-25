@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "fr.vpm.changingtables"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "fr.vpm.changingtables"
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
