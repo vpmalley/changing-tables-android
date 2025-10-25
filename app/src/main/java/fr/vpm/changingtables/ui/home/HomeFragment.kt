@@ -58,42 +58,7 @@ class HomeFragment : Fragment() {
             annotationData != null
         }
 
-//        val airplaneBitmap =
-//            bitmapFromDrawableRes(R.drawable.ic_airplanemode_active_black_24dp)
-        // create a symbol
-//        val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
-//            .withPoint(Point.fromLngLat(AIRPORT_LONGITUDE, AIRPORT_LATITUDE))
-//            .withIconImage(airplaneBitmap)
-//            .withTextField(ID_ICON_AIRPORT)
-//            .withTextOffset(listOf(0.0, -2.0))
-//            .withTextColor(Color.RED)
-//            .withIconSize(1.3)
-//            .withIconOffset(listOf(0.0, -5.0))
-//            .withSymbolSortKey(10.0)
-//            .withDraggable(true)
-//        pointAnnotation = create(pointAnnotationOptions)
-
         drawMarkers(pointAnnotationManager)
-
-        // random add symbols across the globe
-//        val pointAnnotationOptionsList = List(25) {
-//            PointAnnotationOptions()
-//                .withPoint(AnnotationUtils.createRandomPoint())
-//                .withIconImage(airplaneBitmap)
-//                .withDraggable(true)
-//        }
-//        create(pointAnnotationOptionsList)
-//        lifecycleScope.launch {
-//            val featureCollection = withContext(Dispatchers.Default) {
-//                FeatureCollection.fromJson(
-//                    AnnotationUtils.loadStringFromAssets(
-//                        this@PointAnnotationActivity,
-//                        "annotations.json"
-//                    )
-//                )
-//            }
-//            create(featureCollection)
-//        }
     }
 
     private fun showBusiness(business: Business?) {
