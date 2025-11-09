@@ -20,12 +20,15 @@ import fr.vpm.changingtables.R
 import fr.vpm.changingtables.databinding.FragmentHomeBinding
 import fr.vpm.changingtables.models.Business
 import fr.vpm.changingtables.ui.tools.MapUtils
+import fr.vpm.changingtables.viewmodels.BusinessViewModel
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
+    private var pointAnnotationManager: PointAnnotationManager? = null
 
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val businessViewModel: BusinessViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -48,8 +51,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val annotationApi = binding.mapView.annotations
-        val pointAnnotationManager = annotationApi.createPointAnnotationManager()
-        pointAnnotationManager.addClickListener { annotation ->
+        pointAnnotationManager = annotationApi.createPointAnnotationManager()
+        pointAnnotationManager?.addClickListener { annotation ->
             val annotationData = annotation.getData()
             if (annotationData != null) {
                 val business = gson.fromJson(annotationData, Business::class.java)
@@ -58,7 +61,8 @@ class HomeFragment : Fragment() {
             annotationData != null
         }
 
-        drawMarkers(pointAnnotationManager)
+
+        businessViewModel.businesses.observe(viewLifecycleOwner, ::onBusinesses)
     }
 
     private fun showBusiness(business: Business?) {
@@ -84,24 +88,20 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun drawMarkers(pointAnnotationManager: PointAnnotationManager) {
+
+    private fun onBusinesses(businesses: List<Business>?) {
         val greenBusinessMarker =
             MapUtils().bitmapFromDrawableRes(
                 requireContext(),
                 R.drawable.pin_ok_teal_32dp
             )
-
-        val allBusinessAnnotationOptions = listOf(Business().apply {
-            name = "JJ Bean Cambie"
-            type = "cafe"
-            longitude = -123.1154027480853
-            latitude = 49.2551275385386
-            hasChangingTable = true
-        }).map { business ->
-            BusinessToPointAnnotation().toPointAnnotation(business)
-                .withIconImage(greenBusinessMarker)
+        if (businesses != null) {
+            val allBusinessAnnotationOptions = businesses.map { business ->
+                BusinessToPointAnnotation().toPointAnnotation(business)
+                    .withIconImage(greenBusinessMarker)
+            }
+            pointAnnotationManager?.create(allBusinessAnnotationOptions)
         }
-        pointAnnotationManager.create(allBusinessAnnotationOptions)
     }
 
     override fun onDestroyView() {
