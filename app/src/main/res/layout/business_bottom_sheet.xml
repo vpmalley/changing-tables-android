@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/business_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
+    android:background="@drawable/bottom_sheet_background"
     android:padding="@dimen/margin_material"
-    app:behavior_hideable="false"
+    app:behavior_hideable="true"
     app:behavior_peekHeight="210dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <!-- Optional: Add a drag handle visual cue -->
     <View
+        android:id="@+id/drag_handle"
         android:layout_width="32dp"
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/darker_gray" /> <!-- Customize color -->
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/business_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_margin="@dimen/margin_material"
+        android:gravity="center_vertical|start"
         android:text="Your Title Here"
-        android:textAppearance="?attr/textAppearanceHeadline6" />
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/drag_handle" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/business_description"
@@ -38,7 +43,10 @@
         android:drawableTint="?attr/colorPrimary"
         android:gravity="center_vertical"
         android:text="Your detailed business description goes here. It can be multiple lines long."
-        android:textAppearance="?attr/textAppearanceBody1" />
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/business_title" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/changing_table_description"
@@ -50,6 +58,9 @@
         android:drawableTint="?attr/colorPrimary"
         android:gravity="center_vertical"
         android:text="Your detailed business description goes here. It can be multiple lines long."
-        android:textAppearance="?attr/textAppearanceBody1" />
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/business_description" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

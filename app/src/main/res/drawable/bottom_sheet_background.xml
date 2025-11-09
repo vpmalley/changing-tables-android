@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- The background color of your bottom sheet -->
+    <solid android:color="?attr/colorSurface" />
+
+    <!-- The corner radii. Set bottom corners to 0dp to keep them square. -->
+    <corners
+        android:bottomLeftRadius="0dp"
+        android:bottomRightRadius="0dp"
+        android:topLeftRadius="28dp"
+        android:topRightRadius="28dp" />
+
+</shape>

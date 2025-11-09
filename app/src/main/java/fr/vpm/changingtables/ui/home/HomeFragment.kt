@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
@@ -52,9 +52,9 @@ class HomeFragment : Fragment() {
     private fun showBusiness(business: Business?) {
         val businessBottomSheet = _binding?.businessBottomSheet
         businessBottomSheet?.businessLayout?.visibility = View.VISIBLE
-        val bottomSheetLayout: LinearLayout? = businessBottomSheet?.businessLayout
+        val bottomSheetLayout: ConstraintLayout? = businessBottomSheet?.businessLayout
         val bottomSheetBehavior =
-            bottomSheetLayout?.let { BottomSheetBehavior.from<LinearLayout?>(bottomSheetLayout) }
+            bottomSheetLayout?.let { BottomSheetBehavior.from<ConstraintLayout?>(bottomSheetLayout) }
         bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         businessBottomSheet?.businessTitle?.text = business?.name
         businessBottomSheet?.businessDescription?.text = business?.description ?: "Coffee shop"
