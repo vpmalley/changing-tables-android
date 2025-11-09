@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.mapbox)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
 //    implementation(libs.mapbox.annotation)
 
     testImplementation(libs.junit)
