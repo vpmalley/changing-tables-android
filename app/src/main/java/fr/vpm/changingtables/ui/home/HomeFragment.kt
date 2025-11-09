@@ -11,30 +11,24 @@ import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.gson.Gson
 import com.mapbox.maps.plugin.annotation.annotations
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
-import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
-import fr.vpm.changingtables.BusinessToPointAnnotation
 import fr.vpm.changingtables.R
 import fr.vpm.changingtables.databinding.FragmentHomeBinding
 import fr.vpm.changingtables.models.Business
-import fr.vpm.changingtables.ui.tools.MapUtils
 import fr.vpm.changingtables.viewmodels.BusinessViewModel
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private var pointAnnotationManager: PointAnnotationManager? = null
 
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val businessViewModel: BusinessViewModel by activityViewModels()
 
+    private var mapManager = MapManager()
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-
-    val gson = Gson().newBuilder().create()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,17 +44,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val annotationApi = binding.mapView.annotations
-        pointAnnotationManager = annotationApi.createPointAnnotationManager()
-        pointAnnotationManager?.addClickListener { annotation ->
-            val annotationData = annotation.getData()
-            if (annotationData != null) {
-                val business = gson.fromJson(annotationData, Business::class.java)
-                showBusiness(business)
-            }
-            annotationData != null
-        }
-
+        mapManager.setupPointAnnotationManager(binding.mapView.annotations, ::showBusiness)
 
         businessViewModel.businesses.observe(viewLifecycleOwner, ::onBusinesses)
     }
@@ -90,18 +74,7 @@ class HomeFragment : Fragment() {
 
 
     private fun onBusinesses(businesses: List<Business>?) {
-        val greenBusinessMarker =
-            MapUtils().bitmapFromDrawableRes(
-                requireContext(),
-                R.drawable.pin_ok_teal_32dp
-            )
-        if (businesses != null) {
-            val allBusinessAnnotationOptions = businesses.map { business ->
-                BusinessToPointAnnotation().toPointAnnotation(business)
-                    .withIconImage(greenBusinessMarker)
-            }
-            pointAnnotationManager?.create(allBusinessAnnotationOptions)
-        }
+        mapManager.showBusinesses(requireContext(), businesses)
     }
 
     override fun onDestroyView() {
