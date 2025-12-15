@@ -27,7 +27,7 @@ androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycleViewmodelKtx" }
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUiKtx" }
-mapbox = { group = "com.mapbox.maps", name = "android", version.ref = "mapbox" }
+mapbox = { group = "com.mapbox.maps", name = "android-ndk27", version.ref = "mapbox" }
 mapbox-annotation = { group = "com.mapbox.mapboxsdk", name = "mapbox-android-plugin-annotation-v9", version.ref = "mapboxAnnotation" }
 
 [plugins]
