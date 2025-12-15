@@ -58,6 +58,7 @@ class HomeFragment : Fragment() {
         bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         businessBottomSheet?.businessTitle?.text = business?.name
         businessBottomSheet?.businessDescription?.text = business?.description ?: "Coffee shop"
+        businessBottomSheet?.businessRating?.rating = business?.ratingAsFloat ?: 0f
         if (business?.hasChangingTable == true) {
             businessBottomSheet?.changingTableDescription?.let {
                 it.text = "There is a changing table here"
