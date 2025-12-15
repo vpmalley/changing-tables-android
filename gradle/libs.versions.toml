@@ -8,16 +8,12 @@ espressoCore = "3.7.0"
 appcompat = "1.7.1"
 material = "1.13.0"
 constraintlayout = "2.2.1"
-lifecycleLivedataKtx = "2.9.4"
-lifecycleViewmodelKtx = "2.9.4"
-navigationFragmentKtx = "2.9.5"
-navigationUiKtx = "2.9.5"
+lifecycleLivedataKtx = "2.10.0"
+lifecycleViewmodelKtx = "2.10.0"
+navigationFragmentKtx = "2.9.6"
+navigationUiKtx = "2.9.6"
 mapbox = "11.12.2"
 mapboxAnnotation = "0.9.0"
-navigationFragmentKtxVersion = "2.9.5"
-navigationUiKtxVersion = "2.9.5"
-androidxNavigationFragmentKtx = "2.9.6"
-androidxNavigationUiKtx = "2.9.6"
 
 [libraries]
 androidx-core = { group = "androidx.core", name = "core", version.ref = "coreKtx" }
@@ -33,10 +29,6 @@ androidx-navigation-fragment = { group = "androidx.navigation", name = "navigati
 androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUiKtx" }
 mapbox = { group = "com.mapbox.maps", name = "android", version.ref = "mapbox" }
 mapbox-annotation = { group = "com.mapbox.mapboxsdk", name = "mapbox-android-plugin-annotation-v9", version.ref = "mapboxAnnotation" }
-androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtxVersion" }
-androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtxVersion" }
-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidxNavigationFragmentKtx" }
-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "androidxNavigationUiKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

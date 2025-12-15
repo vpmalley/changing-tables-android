@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "fr.vpm.changingtables"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -50,10 +50,6 @@ dependencies {
     implementation(libs.androidx.navigation.ui)
 
     implementation(libs.mapbox)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.navigation.fragment.ktx)
-    implementation(libs.navigation.ui.ktx)
 //    implementation(libs.mapbox.annotation)
 
     testImplementation(libs.junit)
