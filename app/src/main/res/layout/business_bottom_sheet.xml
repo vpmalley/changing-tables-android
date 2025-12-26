@@ -60,6 +60,7 @@
         android:gravity="center_vertical"
         android:text="Your detailed business description goes here. It can be multiple lines long."
         android:textAppearance="?attr/textAppearanceBody1"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/business_description" />
@@ -78,5 +79,61 @@
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/changing_table_description" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/changing_table_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_thin"
+        android:layout_marginTop="@dimen/margin_material"
+        android:layout_marginBottom="@dimen/margin_material"
+        android:drawableStart="@drawable/baby_changing_station_green_24"
+        android:drawablePadding="@dimen/margin_thin"
+        android:drawableTint="?attr/colorPrimary"
+        android:gravity="center_vertical"
+        android:text="Is there a changing table here?"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/business_rating" />
+
+    <!-- The ChipGroup to hold the options -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/changing_table_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_material"
+        app:chipSpacingHorizontal="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/changing_table_question"
+        app:selectionRequired="true"
+        app:singleSelection="true">
+
+        <!-- The "Yes" Chip -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_yes"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/all_yes" />
+
+        <!-- The "No" Chip -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_no"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/all_no" />
+
+        <!-- The "Out of service" Chip -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_out_of_service"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/changing_table_out_of_service" />
+
+    </com.google.android.material.chip.ChipGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
