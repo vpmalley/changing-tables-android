@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_material"
         android:gravity="center_vertical|start"
+        android:paddingBottom="@dimen/margin_thin"
         android:text="Your Title Here"
         android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,14 +66,16 @@
 
     <RatingBar
         android:id="@+id/business_rating"
-        style="@style/CustomRatingBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:isIndicator="false"
         android:numStars="5"
+        android:progressDrawable="@drawable/custom_rating_bar"
         android:rating="3"
         android:stepSize="1"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/changing_table_description" />
 
