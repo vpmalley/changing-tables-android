@@ -6,4 +6,8 @@
     <string name="all_yes">Yes</string>
     <string name="all_no">No</string>
     <string name="changing_table_out_of_service">Out of service</string>
+    <string name="changing_table_unisex_toilet">Unisex toilet</string>
+    <string name="changing_table_female_toilet">Female toilet</string>
+    <string name="changing_table_male_toilet">Male toilet</string>
+    <string name="changing_table_other_place">Other room</string>
 </resources>

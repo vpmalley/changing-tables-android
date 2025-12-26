@@ -11,6 +11,7 @@ import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.chip.Chip
 import com.mapbox.maps.plugin.annotation.annotations
 import fr.vpm.changingtables.R
 import fr.vpm.changingtables.databinding.FragmentHomeBinding
@@ -71,6 +72,19 @@ class HomeFragment : Fragment() {
             }
         } else {
             businessBottomSheet?.changingTableDescription?.text = "No changing table"
+        }
+        businessBottomSheet?.changingTableOptions?.setOnCheckedStateChangeListener { group, checkedIds ->
+            if (checkedIds.isNotEmpty()) {
+                val selectedChipId = checkedIds.first() // Get the first and only ID
+                val selectedChip = group.findViewById<Chip>(selectedChipId)
+                if (selectedChip.text.toString() == getString(R.string.all_yes)) {
+                    businessBottomSheet.changingTableLocationQuestion.visibility = View.VISIBLE
+                    businessBottomSheet.changingTableLocationOptions.visibility = View.VISIBLE
+                } else {
+                    businessBottomSheet.changingTableLocationQuestion.visibility = View.GONE
+                    businessBottomSheet.changingTableLocationOptions.visibility = View.GONE
+                }
+            }
         }
     }
 
