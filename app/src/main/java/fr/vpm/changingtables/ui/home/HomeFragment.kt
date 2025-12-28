@@ -73,17 +73,29 @@ class HomeFragment : Fragment() {
         } else {
             businessBottomSheet?.changingTableDescription?.text = "No changing table"
         }
-        businessBottomSheet?.changingTableOptions?.setOnCheckedStateChangeListener { group, checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                val selectedChipId = checkedIds.first() // Get the first and only ID
-                val selectedChip = group.findViewById<Chip>(selectedChipId)
-                if (selectedChip.text.toString() == getString(R.string.all_yes)) {
-                    businessBottomSheet.changingTableLocationQuestion.visibility = View.VISIBLE
-                    businessBottomSheet.changingTableLocationOptions.visibility = View.VISIBLE
-                } else {
-                    businessBottomSheet.changingTableLocationQuestion.visibility = View.GONE
-                    businessBottomSheet.changingTableLocationOptions.visibility = View.GONE
-                }
+        businessBottomSheet?.changingTableQuestionWithChips?.setChips(
+            listOf(
+                "Yes",
+                "No",
+                "Out of Service"
+            ),
+            com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
+        )
+        businessBottomSheet?.changingTableQuestionWithChips?.setOnChipSelectedListener { selectedChipIds: List<Int>, selectedChipTexts: List<String> ->
+            if (selectedChipTexts.contains("Yes")) {
+                businessBottomSheet.changingTableLocationQuestionWithChips.visibility = View.VISIBLE
+                businessBottomSheet.changingTableLocationQuestionWithChips.setChips(
+                    listOf(
+                        "Unisex toilet",
+                        "Male toilet",
+                        "Female toilet",
+                        "Other room"
+                    ),
+                    com.google.android.material.R.style.Widget_Material3_Chip_Filter,
+                    false
+                )
+            } else {
+                businessBottomSheet.changingTableLocationQuestionWithChips.visibility = View.GONE
             }
         }
     }

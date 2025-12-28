@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="QuestionWithChipsView">
+        <!-- Attribute to set the title text of the component -->
+        <attr name="questionText" format="string" />
+        <!-- Attribute to control single or multiple chip selection -->
+        <attr name="questionChipsSingleSelection" format="boolean" />
+    </declare-styleable>
+</resources>
