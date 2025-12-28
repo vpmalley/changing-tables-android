@@ -88,8 +88,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/business_rating"
-        app:questionChipsSingleSelection="true"
-        app:questionText="Is there a changing table here?" />
+        app:questionChipsSingleSelection="true" />
 
     <fr.vpm.changingtables.QuestionWithChipsView
         android:id="@+id/changing_table_location_question_with_chips"
@@ -100,7 +99,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/changing_table_question_with_chips"
-        app:questionChipsSingleSelection="true"
-        app:questionText="Where is the changing table located?" />
+        app:questionChipsSingleSelection="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

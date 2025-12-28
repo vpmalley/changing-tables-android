@@ -3,6 +3,7 @@ package fr.vpm.changingtables
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import androidx.annotation.StyleRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.chip.Chip
@@ -52,6 +53,18 @@ class QuestionWithChipsView @JvmOverloads constructor(
             val selectedTexts = checkedIds.map { group.findViewById<Chip>(it).text.toString() }
             // Invoke the public listener
             selectionListener?.invoke(checkedIds, selectedTexts)
+        }
+    }
+
+    /**
+     * Sets the title text displayed above the chip group.
+     */
+    fun setTitle(titleResId: Int?) {
+        if (titleResId != null) {
+            binding.chipSelectionTitle.setText(titleResId)
+            binding.chipSelectionTitle.visibility = VISIBLE
+        } else {
+            binding.chipSelectionTitle.visibility = GONE
         }
     }
 

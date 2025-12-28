@@ -73,6 +73,7 @@ class HomeFragment : Fragment() {
         } else {
             businessBottomSheet?.changingTableDescription?.text = "No changing table"
         }
+        businessBottomSheet?.changingTableQuestionWithChips?.setTitle(R.string.changing_table_question)
         businessBottomSheet?.changingTableQuestionWithChips?.setChips(
             listOf(
                 "Yes",
@@ -83,6 +84,7 @@ class HomeFragment : Fragment() {
         )
         businessBottomSheet?.changingTableQuestionWithChips?.setOnChipSelectedListener { selectedChipIds: List<Int>, selectedChipTexts: List<String> ->
             if (selectedChipTexts.contains("Yes")) {
+                businessBottomSheet.changingTableLocationQuestionWithChips.setTitle(R.string.changing_table_location_question)
                 businessBottomSheet.changingTableLocationQuestionWithChips.visibility = View.VISIBLE
                 businessBottomSheet.changingTableLocationQuestionWithChips.setChips(
                     listOf(
