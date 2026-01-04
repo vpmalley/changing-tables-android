@@ -16,6 +16,8 @@ import com.mapbox.maps.plugin.annotation.annotations
 import fr.vpm.changingtables.R
 import fr.vpm.changingtables.databinding.FragmentHomeBinding
 import fr.vpm.changingtables.models.Business
+import fr.vpm.changingtables.models.Option
+import fr.vpm.changingtables.models.Question
 import fr.vpm.changingtables.viewmodels.BusinessViewModel
 
 class HomeFragment : Fragment() {
@@ -73,29 +75,38 @@ class HomeFragment : Fragment() {
         } else {
             businessBottomSheet?.changingTableDescription?.text = "No changing table"
         }
-        businessBottomSheet?.changingTableQuestionWithChips?.setTitle(R.string.changing_table_question)
-        businessBottomSheet?.changingTableQuestionWithChips?.setChips(
-            listOf(
-                "Yes",
-                "No",
-                "Out of Service"
-            ),
+
+        val changingTableQuestion = Question().apply {
+            titleResId = R.string.changing_table_question
+            options = listOf(
+                Option("yes", R.string.all_yes),
+                Option("no", R.string.all_no),
+                Option("out_of_service", R.string.changing_table_out_of_service)
+            )
+            singleChoice = true
+        }
+        businessBottomSheet?.changingTableQuestionWithChips?.setQuestion(
+            changingTableQuestion,
             com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
         )
-        businessBottomSheet?.changingTableQuestionWithChips?.setOnChipSelectedListener { selectedChipIds: List<Int>, selectedChipTexts: List<String> ->
-            if (selectedChipTexts.contains("Yes")) {
-                businessBottomSheet.changingTableLocationQuestionWithChips.setTitle(R.string.changing_table_location_question)
-                businessBottomSheet.changingTableLocationQuestionWithChips.visibility = View.VISIBLE
-                businessBottomSheet.changingTableLocationQuestionWithChips.setChips(
-                    listOf(
-                        "Unisex toilet",
-                        "Male toilet",
-                        "Female toilet",
-                        "Other room"
-                    ),
-                    com.google.android.material.R.style.Widget_Material3_Chip_Filter,
-                    false
+        businessBottomSheet?.changingTableQuestionWithChips?.setOnChipSelectedListener { selectedChipIds: List<Int>, selectedChipTexts: List<String>, selectedChipTags: List<String?> ->
+            if (selectedChipTags.any { it == "yes" }) {
+                val changingTableLocationQuestion = Question().apply {
+                    titleResId = R.string.changing_table_location_question
+                    options = listOf(
+                        Option("unisex", R.string.changing_table_unisex_toilet),
+                        Option("male", R.string.changing_table_male_toilet),
+                        Option("female", R.string.changing_table_female_toilet),
+                        Option("accessible", R.string.changing_table_accessible_toilet),
+                        Option("other_room", R.string.changing_table_other_place)
+                    )
+                    singleChoice = false
+                }
+                businessBottomSheet.changingTableLocationQuestionWithChips.setQuestion(
+                    changingTableLocationQuestion,
+                    com.google.android.material.R.style.Widget_Material3_Chip_Filter
                 )
+                businessBottomSheet.changingTableLocationQuestionWithChips.visibility = View.VISIBLE
             } else {
                 businessBottomSheet.changingTableLocationQuestionWithChips.visibility = View.GONE
             }

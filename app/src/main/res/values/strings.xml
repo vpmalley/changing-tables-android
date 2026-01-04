@@ -9,6 +9,7 @@
     <string name="changing_table_unisex_toilet">Unisex toilet</string>
     <string name="changing_table_female_toilet">Female toilet</string>
     <string name="changing_table_male_toilet">Male toilet</string>
+    <string name="changing_table_accessible_toilet">Accessible toilet</string>
     <string name="changing_table_other_place">Other room</string>
     <string name="changing_table_question">Is there a changing table here?</string>
     <string name="changing_table_location_question">Where is the changing table located?</string>
