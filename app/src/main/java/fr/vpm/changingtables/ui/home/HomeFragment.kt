@@ -48,6 +48,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mapManager.setupPointAnnotationManager(binding.mapView.annotations, ::showBusiness)
+        mapManager.setupAddingBusiness(binding.mapView, ::showNewBusiness)
 
         businessViewModel.businesses.observe(viewLifecycleOwner, ::onBusinesses)
     }
@@ -59,12 +60,21 @@ class HomeFragment : Fragment() {
         val bottomSheetBehavior =
             bottomSheetLayout?.let { BottomSheetBehavior.from<ConstraintLayout?>(bottomSheetLayout) }
         bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        businessBottomSheet?.businessAddPrompt?.visibility = View.GONE
+        businessBottomSheet?.businessTitleNew?.visibility = View.INVISIBLE
+        businessBottomSheet?.businessTitle?.visibility = View.VISIBLE
+        businessBottomSheet?.changingTableDescription?.visibility = View.VISIBLE
+        businessBottomSheet?.addBusinessButton?.visibility = View.GONE
+        businessBottomSheet?.addBusinessButton?.isEnabled = false
+
         businessBottomSheet?.businessTitle?.text = business?.name
         businessBottomSheet?.businessDescription?.text = business?.description ?: "Coffee shop"
         businessBottomSheet?.businessRating?.rating = business?.ratingAsFloat ?: 0f
         businessBottomSheet?.businessRating?.numStars = 5
         if (business?.hasChangingTable == true) {
             businessBottomSheet?.changingTableDescription?.let {
+                it.visibility = View.VISIBLE
                 it.text = "There is a changing table here"
                 TextViewCompat.setCompoundDrawableTintList(
                     it, ColorStateList.valueOf(
@@ -73,8 +83,25 @@ class HomeFragment : Fragment() {
                 )
             }
         } else {
+            businessBottomSheet?.changingTableDescription?.visibility = View.VISIBLE
             businessBottomSheet?.changingTableDescription?.text = "No changing table"
         }
+    }
+
+    private fun showNewBusiness() {
+        val businessBottomSheet = _binding?.businessBottomSheet
+        businessBottomSheet?.businessLayout?.visibility = View.VISIBLE
+        val bottomSheetLayout: ConstraintLayout? = businessBottomSheet?.businessLayout
+        val bottomSheetBehavior =
+            bottomSheetLayout?.let { BottomSheetBehavior.from<ConstraintLayout?>(bottomSheetLayout) }
+        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        businessBottomSheet?.businessAddPrompt?.visibility = View.VISIBLE
+        businessBottomSheet?.businessTitleNew?.visibility = View.VISIBLE
+        businessBottomSheet?.businessTitle?.visibility = View.GONE
+        businessBottomSheet?.changingTableDescription?.visibility = View.GONE
+        businessBottomSheet?.addBusinessButton?.visibility = View.VISIBLE
+        businessBottomSheet?.addBusinessButton?.isEnabled = false
 
         val changingTableQuestion = Question().apply {
             titleResId = R.string.changing_table_question
@@ -90,6 +117,7 @@ class HomeFragment : Fragment() {
             com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
         )
         businessBottomSheet?.changingTableQuestionWithChips?.setOnChipSelectedListener { selectedChipIds: List<Int>, selectedChipTexts: List<String>, selectedChipTags: List<String?> ->
+            businessBottomSheet.addBusinessButton.isEnabled = true
             if (selectedChipTags.any { it == "yes" }) {
                 val changingTableLocationQuestion = Question().apply {
                     titleResId = R.string.changing_table_location_question
@@ -120,6 +148,7 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mapManager.onDestroyView()
         _binding = null
     }
 }

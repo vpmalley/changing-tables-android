@@ -7,7 +7,7 @@
     android:background="@drawable/bottom_sheet_background"
     android:padding="@dimen/margin_material"
     app:behavior_hideable="true"
-    app:behavior_peekHeight="210dp"
+    app:behavior_peekHeight="240dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <!-- Optional: Add a drag handle visual cue -->
@@ -22,17 +22,52 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/business_add_prompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_material"
+        android:gravity="center_vertical|start"
+        android:paddingBottom="@dimen/margin_thin"
+        android:text="@string/business_add_prompt"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/drag_handle" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/business_title_new"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_material"
+        android:gravity="center_vertical|start"
+        android:hint="@string/business_name_label"
+        android:paddingBottom="@dimen/margin_thin"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/business_add_prompt">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/business_title_new_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/business_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_material"
         android:gravity="center_vertical|start"
         android:paddingBottom="@dimen/margin_thin"
-        android:text="Your Title Here"
+        android:text="@string/business_name_label"
         android:textAppearance="?attr/textAppearanceHeadline6"
+        app:layout_constraintBottom_toBottomOf="@id/business_title_new"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/drag_handle" />
+        app:layout_constraintTop_toTopOf="@id/business_title_new" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/business_description"
@@ -43,11 +78,11 @@
         android:drawablePadding="@dimen/margin_thin"
         android:drawableTint="?attr/colorPrimary"
         android:gravity="center_vertical"
-        android:text="Your detailed business description goes here. It can be multiple lines long."
+        android:text="@string/business_type"
         android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/business_title" />
+        app:layout_constraintTop_toBottomOf="@id/business_title_new" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/changing_table_description"
@@ -100,5 +135,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/changing_table_question_with_chips"
         app:questionChipsSingleSelection="true" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/add_business_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_material"
+        android:text="@string/add_business"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/changing_table_location_question_with_chips" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
