@@ -12,4 +12,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#05C405</color>
+
+    <color name="primaryBlue">#4E9DB8</color>
+    <color name="lightBlue">#B4D5DD</color>
+    <color name="lightGrey">#F0EBE5</color>
+    <color name="primaryOrange">#F4680A</color>
+    <color name="lightOrange">#F99D45</color>
+
+    <color name="onPrimaryBlue">#00313E</color>
+    <color name="containerBlue">#84D1EE</color>
+    <color name="onContainerBlue">#003543</color>
+    <color name="containerOrange">#FFC18E</color>
+    <color name="onContainerOrange">#4C2700</color>
 </resources>
