@@ -3,6 +3,7 @@ package fr.vpm.changingtables.ui.home
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,9 @@ import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.chip.Chip
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.annotations
 import fr.vpm.changingtables.R
@@ -49,10 +52,59 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupBottomSheet()
         mapManager.setupPointAnnotationManager(binding.mapView.annotations, ::showBusiness)
         mapManager.setupAddingBusiness(binding.mapView, ::showNewBusiness)
 
         businessViewModel.businesses.observe(viewLifecycleOwner, ::onBusinesses)
+    }
+
+    private fun setupBottomSheet() {
+        val businessBottomSheet = binding.businessBottomSheet
+        val bottomSheetLayout = businessBottomSheet.businessLayout
+        val behavior = BottomSheetBehavior.from(bottomSheetLayout)
+        val initialPeekHeight = behavior.peekHeight
+
+        val cornerRadius = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            28f,
+            resources.displayMetrics
+        )
+
+        val shapeAppearanceModel = ShapeAppearanceModel.builder()
+            .setTopLeftCorner(CornerFamily.ROUNDED, cornerRadius)
+            .setTopRightCorner(CornerFamily.ROUNDED, cornerRadius)
+            .build()
+
+        val typedValue = TypedValue()
+        requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
+        val colorSurface = typedValue.data
+
+        val backgroundDrawable = MaterialShapeDrawable(shapeAppearanceModel).apply {
+            fillColor = ColorStateList.valueOf(colorSurface)
+        }
+        bottomSheetLayout.background = backgroundDrawable
+
+        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                val parentHeight = bottomSheet.parent.let { (it as View).height }.toFloat()
+                if (parentHeight > 0) {
+                    // Interpolation: 0 at the top (square), 1 when far from top (rounded)
+                    // Animation happens when the sheet is within 2 * cornerRadius from the top
+                    val threshold = cornerRadius * 2
+                    val interpolation = (bottomSheet.top.toFloat() / threshold).coerceIn(0f, 1f)
+                    backgroundDrawable.interpolation = interpolation
+                }
+
+                if (behavior.state == BottomSheetBehavior.STATE_DRAGGING) {
+                    val currentHeight = parentHeight.toInt() - bottomSheet.top
+                    behavior.peekHeight = currentHeight.coerceAtLeast(initialPeekHeight)
+                }
+            }
+        })
     }
 
     private fun showBusiness(business: Business?) {
