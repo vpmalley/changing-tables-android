@@ -2,6 +2,7 @@ package fr.vpm.changingtables.ui.home
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -180,6 +181,7 @@ class HomeFragment : Fragment() {
 
 
     private fun onBusinesses(businesses: List<Business>?) {
+        Log.d("businessViewModel", "all businesses to display are : $businesses")
         mapManager.showBusinesses(requireContext(), businesses)
     }
 

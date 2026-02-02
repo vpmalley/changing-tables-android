@@ -1,5 +1,6 @@
 package fr.vpm.changingtables.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,6 +21,7 @@ class BusinessViewModel : ViewModel() {
     fun addBusiness(business: Business) {
         val currentBusinesses = allBusinesses.value?.toMutableList() ?: mutableListOf()
         currentBusinesses.add(business)
+        Log.d("businessViewModel", "all businesses are : $currentBusinesses")
         allBusinesses.value = currentBusinesses
     }
 
