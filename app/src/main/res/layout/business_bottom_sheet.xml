@@ -4,8 +4,9 @@
     android:id="@+id/business_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bottom_sheet_background"
     android:padding="@dimen/margin_material"
+    app:behavior_fitToContents="false"
+    app:behavior_halfExpandedRatio="0.5"
     app:behavior_hideable="true"
     app:behavior_peekHeight="240dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
