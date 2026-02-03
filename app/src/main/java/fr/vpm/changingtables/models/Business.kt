@@ -6,7 +6,8 @@ class Business {
     var description: String? = null
     var longitude: Double = 0.0
     var latitude: Double = 0.0
-    var hasChangingTable: Boolean = false
+    var hasChangingTable: String? = null
+    var changingTableLocation: String? = null
     var rating: Int = -1
 
     val ratingAsFloat: Float
