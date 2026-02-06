@@ -3,6 +3,7 @@ package fr.vpm.changingtables.ui.home
 import android.content.Context
 import android.graphics.Bitmap
 import com.google.gson.Gson
+import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.plugin.annotation.AnnotationPlugin
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
@@ -60,11 +61,11 @@ class MapManager {
         }
     }
 
-    fun setupAddingBusiness(mapView: MapView, showNewBusiness: () -> Unit) {
+    fun setupAddingBusiness(mapView: MapView, showNewBusiness: (point: Point) -> Unit) {
         mapView.isLongClickable = true
-        mapView.mapboxMap.addOnMapLongClickListener {
+        mapView.mapboxMap.addOnMapLongClickListener { point ->
             if (mapView.mapboxMap.cameraState.zoom > 13.0) {
-                showNewBusiness()
+                showNewBusiness(point)
                 true
             } else {
                 false

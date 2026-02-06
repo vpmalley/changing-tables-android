@@ -2,6 +2,7 @@ package fr.vpm.changingtables.ui.home
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
+import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.annotations
 import fr.vpm.changingtables.R
 import fr.vpm.changingtables.databinding.FragmentHomeBinding
@@ -72,7 +74,7 @@ class HomeFragment : Fragment() {
         businessBottomSheet?.businessDescription?.text = business?.description ?: "Coffee shop"
         businessBottomSheet?.businessRating?.rating = business?.ratingAsFloat ?: 0f
         businessBottomSheet?.businessRating?.numStars = 5
-        if (business?.hasChangingTable == true) {
+        if (business?.hasChangingTable == "Yes") {
             businessBottomSheet?.changingTableDescription?.let {
                 it.visibility = View.VISIBLE
                 it.text = "There is a changing table here"
@@ -82,13 +84,30 @@ class HomeFragment : Fragment() {
                     )
                 )
             }
+        } else if (business?.hasChangingTable == "OutOfService") {
+            businessBottomSheet?.changingTableDescription?.let {
+                it.visibility = View.VISIBLE
+                it.text = "Changing table is out of service"
+                TextViewCompat.setCompoundDrawableTintList(
+                    it, ColorStateList.valueOf(
+                        ContextCompat.getColor(requireContext(), R.color.purple_500)
+                    )
+                )
+            }
         } else {
             businessBottomSheet?.changingTableDescription?.visibility = View.VISIBLE
             businessBottomSheet?.changingTableDescription?.text = "No changing table"
+            businessBottomSheet?.changingTableDescription?.let {
+                TextViewCompat.setCompoundDrawableTintList(
+                    it, ColorStateList.valueOf(
+                        ContextCompat.getColor(requireContext(), R.color.black)
+                    )
+                )
+            }
         }
     }
 
-    private fun showNewBusiness() {
+    private fun showNewBusiness(point: Point) {
         val businessBottomSheet = _binding?.businessBottomSheet
         businessBottomSheet?.businessLayout?.visibility = View.VISIBLE
         val bottomSheetLayout: ConstraintLayout? = businessBottomSheet?.businessLayout
@@ -139,10 +158,30 @@ class HomeFragment : Fragment() {
                 businessBottomSheet.changingTableLocationQuestionWithChips.visibility = View.GONE
             }
         }
+        businessBottomSheet?.addBusinessButton?.setOnClickListener {
+            val newBusiness = Business().apply {
+                name = businessBottomSheet.businessTitleNew.editText?.text?.toString()
+//                description = business?.description
+                // find the location
+                longitude = point.longitude()
+                latitude = point.latitude()
+                rating = -1
+//                type = business?.type
+
+                hasChangingTable =
+                    businessBottomSheet.changingTableQuestionWithChips.getSelectedChipTexts()
+                        .firstOrNull()
+                changingTableLocation =
+                    businessBottomSheet.changingTableLocationQuestionWithChips.getSelectedChipTexts()
+                        .firstOrNull()
+            }
+            businessViewModel.addBusiness(newBusiness)
+        }
     }
 
 
     private fun onBusinesses(businesses: List<Business>?) {
+        Log.d("businessViewModel", "all businesses to display are : $businesses")
         mapManager.showBusinesses(requireContext(), businesses)
     }
 

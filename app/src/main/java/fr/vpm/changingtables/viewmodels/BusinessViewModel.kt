@@ -1,5 +1,6 @@
 package fr.vpm.changingtables.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,10 +13,16 @@ class BusinessViewModel : ViewModel() {
         type = "cafe"
         longitude = -123.1154027480853
         latitude = 49.2551275385386
-        hasChangingTable = true
+        hasChangingTable = "Yes"
     }))
 
     val businesses: LiveData<List<Business>> = allBusinesses
 
+    fun addBusiness(business: Business) {
+        val currentBusinesses = allBusinesses.value?.toMutableList() ?: mutableListOf()
+        currentBusinesses.add(business)
+        Log.d("businessViewModel", "all businesses are : $currentBusinesses")
+        allBusinesses.value = currentBusinesses
+    }
 
 }
