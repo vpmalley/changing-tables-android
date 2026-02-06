@@ -6,7 +6,9 @@ import com.google.gson.Gson
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.plugin.annotation.AnnotationPlugin
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotation
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 import fr.vpm.changingtables.BusinessToPointAnnotation
@@ -21,6 +23,8 @@ class MapManager {
     val gson = Gson().newBuilder().create()
 
     private var pointAnnotationManager: PointAnnotationManager? = null
+
+    private var newBusinessAnnotation: PointAnnotation? = null
 
     internal var businessMarkerBitmap: Bitmap? = null
 
@@ -48,17 +52,37 @@ class MapManager {
 
     fun onDestroyView() {
         pointAnnotationManager = null
+        newBusinessAnnotation = null
         businessMarkerBitmap = null
     }
 
     fun showBusinesses(context: Context, businesses: List<Business>?) {
         loadMarkers(context)
+        pointAnnotationManager?.deleteAll()
+        newBusinessAnnotation = null
         if (businesses != null) {
             val allBusinessAnnotationOptions = businesses.map { business ->
                 BusinessToPointAnnotation().toPointAnnotation(business, businessMarkerBitmap)
             }
             pointAnnotationManager?.create(allBusinessAnnotationOptions)
         }
+    }
+
+    fun showNewBusinessMarker(context: Context, point: Point) {
+        loadMarkers(context)
+        val pointAnnotationOptions = PointAnnotationOptions()
+            .withPoint(point)
+            .withIconSize(1.0)
+            .withSymbolSortKey(5.0)
+        businessMarkerBitmap?.let { pointAnnotationOptions.withIconImage(it) }
+        newBusinessAnnotation = pointAnnotationManager?.create(pointAnnotationOptions)
+    }
+
+    fun clearNewBusinessMarker() {
+        newBusinessAnnotation?.let {
+            pointAnnotationManager?.delete(it)
+        }
+        newBusinessAnnotation = null
     }
 
     fun setupAddingBusiness(mapView: MapView, showNewBusiness: (point: Point) -> Unit) {
