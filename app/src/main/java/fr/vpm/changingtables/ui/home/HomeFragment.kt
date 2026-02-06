@@ -13,6 +13,7 @@ import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -87,6 +88,9 @@ class HomeFragment : Fragment() {
 
         behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    mapManager.clearNewBusinessMarker()
+                }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -108,6 +112,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun showBusiness(business: Business?) {
+        mapManager.clearNewBusinessMarker()
         val businessBottomSheet = _binding?.businessBottomSheet
         businessBottomSheet?.businessLayout?.visibility = View.VISIBLE
         val bottomSheetLayout: ConstraintLayout? = businessBottomSheet?.businessLayout
@@ -160,6 +165,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun showNewBusiness(point: Point) {
+        mapManager.clearNewBusinessMarker()
+        mapManager.showNewBusinessMarker(requireContext(), point)
         val businessBottomSheet = _binding?.businessBottomSheet
         businessBottomSheet?.businessLayout?.visibility = View.VISIBLE
         val bottomSheetLayout: ConstraintLayout? = businessBottomSheet?.businessLayout
@@ -228,6 +235,11 @@ class HomeFragment : Fragment() {
                         .firstOrNull()
             }
             businessViewModel.addBusiness(newBusiness)
+            val businessName = newBusiness.name ?: "New business"
+            Snackbar.make(binding.root, "$businessName added", Snackbar.LENGTH_LONG).show()
+
+            bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+            mapManager.clearNewBusinessMarker()
         }
     }
 
