@@ -17,4 +17,8 @@
     <string name="add_business">Add business</string>
     <string name="business_add_prompt">Add a business here? Start with its name</string>
     <string name="business_type">Business type</string>
+    <string name="filter">Filter</string>
+    <string name="coffee">Coffee</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="activity">Activity</string>
 </resources>

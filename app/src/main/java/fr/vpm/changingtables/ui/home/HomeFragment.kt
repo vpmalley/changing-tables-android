@@ -35,6 +35,8 @@ class HomeFragment : Fragment() {
 
     private var mapManager = MapManager()
 
+    private var isFilterExpanded = false
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -54,10 +56,49 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupBottomSheet()
+        setupFilterFab()
         mapManager.setupPointAnnotationManager(binding.mapView.annotations, ::showBusiness)
         mapManager.setupAddingBusiness(binding.mapView, ::showNewBusiness)
 
         businessViewModel.businesses.observe(viewLifecycleOwner, ::onBusinesses)
+    }
+
+    private fun setupFilterFab() {
+        binding.fabFilter.setOnClickListener {
+            toggleFilter()
+        }
+    }
+
+    private fun toggleFilter() {
+        isFilterExpanded = !isFilterExpanded
+        if (isFilterExpanded) {
+            expandFilter()
+        } else {
+            collapseFilter()
+        }
+    }
+
+    private fun expandFilter() {
+        binding.fabFilter.animate().rotation(45f).setDuration(300).start()
+        binding.filterOptions.visibility = View.VISIBLE
+        binding.filterOptions.alpha = 0f
+        binding.filterOptions.translationX = 100f
+        binding.filterOptions.animate()
+            .alpha(1f)
+            .translationX(0f)
+            .setDuration(300)
+            .setListener(null)
+    }
+
+    private fun collapseFilter() {
+        binding.fabFilter.animate().rotation(0f).setDuration(300).start()
+        binding.filterOptions.animate()
+            .alpha(0f)
+            .translationX(100f)
+            .setDuration(300)
+            .withEndAction {
+                binding.filterOptions.visibility = View.GONE
+            }
     }
 
     private fun setupBottomSheet() {
