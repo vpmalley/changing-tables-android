@@ -28,8 +28,8 @@
 
     <include
         android:id="@+id/businessBottomSheet"
-        android:visibility="gone"
-        layout="@layout/business_bottom_sheet" />
+        layout="@layout/business_bottom_sheet"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/filterOptions"
@@ -47,26 +47,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="96dp"
+            android:contentDescription="@string/activity"
             app:fabSize="mini"
-            app:srcCompat="@drawable/ic_local_activity_24"
-            android:contentDescription="@string/activity" />
+            app:srcCompat="@drawable/ic_local_activity_24" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabRestaurant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="96dp"
+            android:contentDescription="@string/restaurant"
             app:fabSize="mini"
-            app:srcCompat="@drawable/ic_restaurant_24"
-            android:contentDescription="@string/restaurant" />
+            app:srcCompat="@drawable/ic_restaurant_24" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabCoffee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="96dp"
+            android:contentDescription="@string/coffee"
             app:fabSize="mini"
-            app:srcCompat="@drawable/ic_coffee_24"
-            android:contentDescription="@string/coffee" />
+            app:srcCompat="@drawable/ic_coffee_24" />
 
     </LinearLayout>
 
@@ -75,7 +78,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_filter_list_24"
-        android:contentDescription="@string/filter" />
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="96dp"
+        android:contentDescription="@string/filter"
+        app:srcCompat="@drawable/ic_filter_list_24" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
