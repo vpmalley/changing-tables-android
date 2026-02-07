@@ -1,28 +1,35 @@
 package fr.vpm.changingtables.viewmodels
 
-import android.util.Log
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import fr.vpm.changingtables.database.AppDatabase
 import fr.vpm.changingtables.models.Business
+import fr.vpm.changingtables.repositories.BusinessRepository
+import kotlinx.coroutines.launch
 
-class BusinessViewModel : ViewModel() {
+class BusinessViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val allBusinesses = MutableLiveData<List<Business>>(listOf(Business().apply {
-        name = "JJ Bean Cambie"
-        type = "cafe"
-        longitude = -123.1154027480853
-        latitude = 49.2551275385386
-        hasChangingTable = "Yes"
-    }))
+    private val repository: BusinessRepository
+    val businesses: LiveData<List<Business>>
 
-    val businesses: LiveData<List<Business>> = allBusinesses
+    init {
+        val businessDao = AppDatabase.getDatabase(application).businessDao()
+        repository = BusinessRepository(businessDao)
+        businesses = repository.allBusinesses
+    }
 
-    fun addBusiness(business: Business) {
-        val currentBusinesses = allBusinesses.value?.toMutableList() ?: mutableListOf()
-        currentBusinesses.add(business)
-        Log.d("businessViewModel", "all businesses are : $currentBusinesses")
-        allBusinesses.value = currentBusinesses
+    fun addBusiness(business: Business) = viewModelScope.launch {
+        repository.insert(business)
+    }
+
+    fun getByArea(area: String): LiveData<List<Business>> {
+        return repository.findByArea(area)
+    }
+
+    fun getByLocation(lat: Double, lon: Double): LiveData<List<Business>> {
+        return repository.findByLocation(lat, lon)
     }
 
 }
