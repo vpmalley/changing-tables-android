@@ -31,7 +31,7 @@ class MapManager {
     fun loadMarkers(context: Context) {
         if (businessMarkerBitmap == null) {
             businessMarkerBitmap =
-                mapUtils.bitmapFromDrawableRes(context, R.drawable.pin_ok_teal_32dp)
+                mapUtils.bitmapFromDrawableRes(context, R.drawable.ic_business_bakery)
         }
     }
 
