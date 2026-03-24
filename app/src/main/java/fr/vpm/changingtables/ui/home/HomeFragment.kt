@@ -105,7 +105,6 @@ class HomeFragment : Fragment() {
         val businessBottomSheet = binding.businessBottomSheet
         val bottomSheetLayout = businessBottomSheet.businessLayout
         val behavior = BottomSheetBehavior.from(bottomSheetLayout)
-        val initialPeekHeight = behavior.peekHeight
 
         val cornerRadius = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
@@ -142,24 +141,52 @@ class HomeFragment : Fragment() {
                     val threshold = cornerRadius * 2
                     val interpolation = (bottomSheet.top.toFloat() / threshold).coerceIn(0f, 1f)
                     backgroundDrawable.interpolation = interpolation
-                }
 
-                if (behavior.state == BottomSheetBehavior.STATE_DRAGGING) {
+                    // Show "Lock height" button if the sheet is in an intermediate state
+                    // between "half-expanded" and "expanded"
                     val currentHeight = parentHeight.toInt() - bottomSheet.top
-                    behavior.peekHeight = currentHeight.coerceAtLeast(initialPeekHeight)
+                    val halfHeight = (parentHeight * behavior.halfExpandedRatio).toInt()
+                    val expandedHeight = parentHeight.toInt()
+
+                    if (currentHeight > halfHeight + 20 && currentHeight < expandedHeight - 20) {
+                        businessBottomSheet.lockHeightButton.visibility = View.VISIBLE
+                    } else {
+                        businessBottomSheet.lockHeightButton.visibility = View.GONE
+                    }
                 }
             }
         })
+
+        businessBottomSheet.lockHeightButton.setOnClickListener {
+            val currentHeight = (bottomSheetLayout.parent as View).height - bottomSheetLayout.top
+            behavior.peekHeight = currentHeight
+            businessBottomSheet.lockHeightButton.visibility = View.GONE
+        }
     }
 
     private fun showBusiness(business: Business?) {
         mapManager.clearNewBusinessMarker()
-        val businessBottomSheet = _binding?.businessBottomSheet
-        businessBottomSheet?.businessLayout?.visibility = View.VISIBLE
-        val bottomSheetLayout: ConstraintLayout? = businessBottomSheet?.businessLayout
-        val bottomSheetBehavior =
-            bottomSheetLayout?.let { BottomSheetBehavior.from<ConstraintLayout?>(bottomSheetLayout) }
-        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        val businessBottomSheet = _binding?.businessBottomSheet ?: return
+        businessBottomSheet.businessLayout.visibility = View.VISIBLE
+        val bottomSheetLayout: ConstraintLayout = businessBottomSheet.businessLayout
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        // Configure Peek Height for "Title Only"
+        businessBottomSheet.businessTitle.post {
+            val titleBottom = businessBottomSheet.businessTitle.bottom
+            val margin = resources.getDimensionPixelSize(R.dimen.margin_material)
+            bottomSheetBehavior.peekHeight = titleBottom + margin
+        }
+
+        // Configure Half-Expanded to show description
+        businessBottomSheet.businessDescription.post {
+            val descriptionBottom = businessBottomSheet.businessDescription.bottom
+            val parentHeight = (bottomSheetLayout.parent as? View)?.height ?: 0
+            if (parentHeight > 0) {
+                bottomSheetBehavior.halfExpandedRatio = (descriptionBottom.toFloat() / parentHeight).coerceIn(0.1f, 0.9f)
+            }
+        }
 
         businessBottomSheet?.businessAddPrompt?.visibility = View.GONE
         businessBottomSheet?.businessTitleNew?.visibility = View.INVISIBLE
