@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import fr.vpm.changingtables.models.Business
 import java.util.concurrent.Executors
 
-@Database(entities = [Business::class], version = 1, exportSchema = false)
+@Database(entities = [Business::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun businessDao(): BusinessDao
@@ -25,25 +25,29 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "business_database"
                 )
-                .addCallback(object : RoomDatabase.Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        Executors.newSingleThreadExecutor().execute {
-                            INSTANCE?.let {
-                                val dao = it.businessDao()
-                                val b = Business().apply {
-                                    name = "JJ Bean Cambie"
-                                    type = "cafe"
-                                    longitude = -123.1154027480853
-                                    latitude = 49.2551275385386
-                                    hasChangingTable = "Yes"
+                    .fallbackToDestructiveMigration()
+                    .addCallback(object : RoomDatabase.Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            Executors.newSingleThreadExecutor().execute {
+                                INSTANCE?.let {
+                                    val dao = it.businessDao()
+                                    val b = Business().apply {
+                                        name = "JJ Bean Cambie"
+                                        type = "cafe"
+                                        longitude = -123.1154027480853
+                                        latitude = 49.2551275385386
+                                        hasChangingTable = "Yes"
+                                        changingTableLocation = "accessible"
+                                        hasDiaperPail = true
+                                        isClean = true
+                                    }
+                                    dao.insertSync(b)
                                 }
-                                dao.insertSync(b)
                             }
                         }
-                    }
-                })
-                .build()
+                    })
+                    .build()
                 INSTANCE = instance
                 instance
             }

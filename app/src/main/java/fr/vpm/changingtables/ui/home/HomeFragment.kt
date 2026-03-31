@@ -170,8 +170,16 @@ class HomeFragment : Fragment() {
 
         businessBottomSheet?.businessTitle?.text = business?.name
         businessBottomSheet?.businessDescription?.text = business?.description ?: "Coffee shop"
+        businessBottomSheet?.businessRating?.visibility = View.VISIBLE
         businessBottomSheet?.businessRating?.rating = business?.ratingAsFloat ?: 0f
         businessBottomSheet?.businessRating?.numStars = 5
+
+        business?.let {
+            displayAmenity(businessBottomSheet?.amenityChangingTable, it.hasChangingTable != "no")
+            displayAmenity(businessBottomSheet?.amenityClean, it.isClean)
+            displayAmenity(businessBottomSheet?.amenityDiaperPail, it.hasDiaperPail)
+        }
+
         if (business?.hasChangingTable == "Yes") {
             businessBottomSheet?.changingTableDescription?.let {
                 it.visibility = View.VISIBLE
@@ -219,6 +227,10 @@ class HomeFragment : Fragment() {
         businessBottomSheet?.businessTitleNew?.visibility = View.VISIBLE
         businessBottomSheet?.businessTitle?.visibility = View.GONE
         businessBottomSheet?.changingTableDescription?.visibility = View.GONE
+        businessBottomSheet?.businessRating?.visibility = View.GONE
+        businessBottomSheet?.amenityChangingTable?.visibility = View.GONE
+        businessBottomSheet?.amenityClean?.visibility = View.GONE
+        businessBottomSheet?.amenityDiaperPail?.visibility = View.GONE
         businessBottomSheet?.addBusinessButton?.visibility = View.VISIBLE
         businessBottomSheet?.addBusinessButton?.isEnabled = false
 
@@ -284,6 +296,16 @@ class HomeFragment : Fragment() {
         }
     }
 
+
+    private fun displayAmenity(view: com.google.android.material.textview.MaterialTextView?, isAvailable: Boolean) {
+        view?.let {
+            it.visibility = View.VISIBLE
+            val iconRes = if (isAvailable) R.drawable.ic_check_24 else R.drawable.ic_close_24
+            it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
+            val colorRes = if (isAvailable) R.color.green else R.color.black // Or another color for 'No'
+            TextViewCompat.setCompoundDrawableTintList(it, ColorStateList.valueOf(ContextCompat.getColor(requireContext(), colorRes)))
+        }
+    }
 
     private fun onBusinesses(businesses: List<Business>?) {
         Log.d("businessViewModel", "all businesses to display are : $businesses")
