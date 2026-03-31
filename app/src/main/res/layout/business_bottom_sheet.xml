@@ -116,6 +116,48 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/changing_table_description" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/amenity_changing_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_thin"
+        android:drawablePadding="@dimen/margin_thin"
+        android:gravity="center_vertical"
+        android:text="@string/amenity_changing_table"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/business_rating" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/amenity_clean"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_thin"
+        android:drawablePadding="@dimen/margin_thin"
+        android:gravity="center_vertical"
+        android:text="@string/amenity_clean"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/amenity_changing_table" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/amenity_diaper_pail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_thin"
+        android:drawablePadding="@dimen/margin_thin"
+        android:gravity="center_vertical"
+        android:text="@string/amenity_diaper_pail"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/amenity_clean" />
+
     <fr.vpm.changingtables.QuestionWithChipsView
         android:id="@+id/changing_table_question_with_chips"
         android:layout_width="match_parent"
@@ -123,7 +165,7 @@
         android:layout_margin="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/business_rating"
+        app:layout_constraintTop_toBottomOf="@id/amenity_diaper_pail"
         app:questionChipsSingleSelection="true" />
 
     <fr.vpm.changingtables.QuestionWithChipsView

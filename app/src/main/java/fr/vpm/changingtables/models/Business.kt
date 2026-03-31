@@ -25,11 +25,23 @@ class Business {
     @JvmField
     var latitude: Double = 0.0
 
+    /**
+     * Enum that can be one of the following: yes, no, out_of_service
+     */
     @JvmField
     var hasChangingTable: String? = null
 
+    /**
+     * Enum that can be one of the following: unisex, male, female, accessible, other_room
+     */
     @JvmField
     var changingTableLocation: String? = null
+
+    @JvmField
+    var hasDiaperPail: Boolean = false
+
+    @JvmField
+    var isClean: Boolean = false
 
     @JvmField
     var rating: Int = -1
