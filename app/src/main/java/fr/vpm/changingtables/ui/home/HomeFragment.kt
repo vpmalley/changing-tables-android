@@ -119,7 +119,11 @@ class HomeFragment : Fragment() {
             .build()
 
         val typedValue = TypedValue()
-        requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
+        requireContext().theme.resolveAttribute(
+            com.google.android.material.R.attr.colorSurface,
+            typedValue,
+            true
+        )
         val colorSurface = typedValue.data
 
         val backgroundDrawable = MaterialShapeDrawable(shapeAppearanceModel).apply {
@@ -167,6 +171,8 @@ class HomeFragment : Fragment() {
         businessBottomSheet?.changingTableDescription?.visibility = View.VISIBLE
         businessBottomSheet?.addBusinessButton?.visibility = View.GONE
         businessBottomSheet?.addBusinessButton?.isEnabled = false
+        businessBottomSheet?.changingTableQuestionWithChips?.visibility = View.GONE
+        businessBottomSheet?.changingTableLocationQuestionWithChips?.visibility = View.GONE
 
         businessBottomSheet?.businessTitle?.text = business?.name
         businessBottomSheet?.businessDescription?.text = business?.description ?: "Coffee shop"
@@ -243,6 +249,7 @@ class HomeFragment : Fragment() {
             )
             singleChoice = true
         }
+        businessBottomSheet?.changingTableQuestionWithChips?.visibility = View.VISIBLE
         businessBottomSheet?.changingTableQuestionWithChips?.setQuestion(
             changingTableQuestion,
             com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
@@ -297,13 +304,20 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun displayAmenity(view: com.google.android.material.textview.MaterialTextView?, isAvailable: Boolean) {
+    private fun displayAmenity(
+        view: com.google.android.material.textview.MaterialTextView?,
+        isAvailable: Boolean
+    ) {
         view?.let {
             it.visibility = View.VISIBLE
             val iconRes = if (isAvailable) R.drawable.ic_check_24 else R.drawable.ic_close_24
             it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
-            val colorRes = if (isAvailable) R.color.green else R.color.black // Or another color for 'No'
-            TextViewCompat.setCompoundDrawableTintList(it, ColorStateList.valueOf(ContextCompat.getColor(requireContext(), colorRes)))
+            val colorRes =
+                if (isAvailable) R.color.green else R.color.black // Or another color for 'No'
+            TextViewCompat.setCompoundDrawableTintList(
+                it,
+                ColorStateList.valueOf(ContextCompat.getColor(requireContext(), colorRes))
+            )
         }
     }
 
