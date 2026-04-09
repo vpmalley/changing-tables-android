@@ -30,7 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)
                             Executors.newSingleThreadExecutor().execute {
-                                db.execSQL("INSERT INTO Business (name, type, longitude, latitude, hasChangingTable, changingTableLocation, hasDiaperPail, isClean) VALUES ('JJ Bean Cambie', 'cafe', -123.1154027480853, 49.2551275385386, 'Yes', 'accessible', 1, 1)")
+                                db.execSQL("INSERT INTO businesses (name, type, longitude, latitude, hasChangingTable, changingTableLocation, hasDiaperPail, isClean, rating, photoUrls) VALUES ('JJ Bean Cambie', 'cafe', -123.1154027480853, 49.2551275385386, 'Yes', 'accessible', 1, 1, -1, '[]')")
                             }
                         }
                     })
