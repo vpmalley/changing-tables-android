@@ -91,7 +91,6 @@ class BusinessBottomSheet(
         binding.businessAddPrompt.visibility = View.GONE
         binding.businessTitleNew.visibility = View.INVISIBLE
         binding.businessTitle.visibility = View.VISIBLE
-        binding.changingTableDescription.visibility = View.VISIBLE
         binding.addBusinessButton.visibility = View.GONE
         binding.addBusinessButton.isEnabled = false
         binding.changingTableQuestionWithChips.visibility = View.GONE
@@ -99,7 +98,7 @@ class BusinessBottomSheet(
 
         binding.businessTitle.text = business?.name
         binding.businessDescription.text = business?.description ?: "Coffee shop"
-        binding.businessRating.visibility = View.VISIBLE
+        binding.businessRating.visibility = View.GONE
         binding.businessRating.rating = business?.ratingAsFloat ?: 0f
         binding.businessRating.numStars = 5
 
@@ -109,37 +108,37 @@ class BusinessBottomSheet(
             displayAmenity(binding.amenityDiaperPail, it.hasDiaperPail)
         }
 
-        if (business?.hasChangingTable == "Yes") {
-            binding.changingTableDescription.let {
-                it.visibility = View.VISIBLE
-                it.text = "There is a changing table here"
-                TextViewCompat.setCompoundDrawableTintList(
-                    it, ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.green)
-                    )
-                )
-            }
-        } else if (business?.hasChangingTable == "OutOfService") {
-            binding.changingTableDescription.let {
-                it.visibility = View.VISIBLE
-                it.text = "Changing table is out of service"
-                TextViewCompat.setCompoundDrawableTintList(
-                    it, ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.purple_500)
-                    )
-                )
-            }
-        } else {
-            binding.changingTableDescription.visibility = View.VISIBLE
-            binding.changingTableDescription.text = "No changing table"
-            binding.changingTableDescription.let {
-                TextViewCompat.setCompoundDrawableTintList(
-                    it, ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.black)
-                    )
-                )
-            }
-        }
+//        if (business?.hasChangingTable == "Yes") {
+//            binding.changingTableDescription.let {
+//                it.visibility = View.VISIBLE
+//                it.text = "There is a changing table here"
+//                TextViewCompat.setCompoundDrawableTintList(
+//                    it, ColorStateList.valueOf(
+//                        ContextCompat.getColor(context, R.color.green)
+//                    )
+//                )
+//            }
+//        } else if (business?.hasChangingTable == "OutOfService") {
+//            binding.changingTableDescription.let {
+//                it.visibility = View.VISIBLE
+//                it.text = "Changing table is out of service"
+//                TextViewCompat.setCompoundDrawableTintList(
+//                    it, ColorStateList.valueOf(
+//                        ContextCompat.getColor(context, R.color.purple_500)
+//                    )
+//                )
+//            }
+//        } else {
+//            binding.changingTableDescription.visibility = View.VISIBLE
+//            binding.changingTableDescription.text = "No changing table"
+//            binding.changingTableDescription.let {
+//                TextViewCompat.setCompoundDrawableTintList(
+//                    it, ColorStateList.valueOf(
+//                        ContextCompat.getColor(context, R.color.black)
+//                    )
+//                )
+//            }
+//        }
     }
 
     fun showNewBusiness(point: Point) {
