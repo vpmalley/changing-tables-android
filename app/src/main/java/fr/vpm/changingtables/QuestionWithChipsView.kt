@@ -4,7 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.annotation.StyleRes
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import fr.vpm.changingtables.databinding.QuestionsWithChipsBinding
 import fr.vpm.changingtables.models.Option
@@ -15,17 +16,25 @@ typealias OnChipSelectedListener = (selectedChipIds: List<Int>, selectedChipText
 
 class QuestionWithChipsView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr) {
+) : MaterialCardView(context, attrs, defStyleAttr) {
 
     // Using View Binding for safe and easy view access
     private val binding: QuestionsWithChipsBinding
 
     private var selectionListener: OnChipSelectedListener? = null
 
+    var onBackClickListener: (() -> Unit)? = null
+    var onSkipClickListener: (() -> Unit)? = null
+
     init {
         // Inflate the layout and attach it to this view
         val inflater = LayoutInflater.from(context)
-        binding = QuestionsWithChipsBinding.inflate(inflater, this)
+        binding = QuestionsWithChipsBinding.inflate(inflater, this, true)
+
+        // Configure Card properties
+        cardElevation = 0f
+        setCardBackgroundColor(ContextCompat.getColor(context, R.color.darkerContainerOrange))
+        radius = resources.getDimension(R.dimen.margin_material) // 16dp
 
         // Read custom attributes from XML
         context.theme.obtainStyledAttributes(
@@ -52,6 +61,9 @@ class QuestionWithChipsView @JvmOverloads constructor(
             // Invoke the public listener
             selectionListener?.invoke(checkedIds, selectedTexts, selectedTags)
         }
+
+        binding.backButton.setOnClickListener { onBackClickListener?.invoke() }
+        binding.skipButton.setOnClickListener { onSkipClickListener?.invoke() }
     }
 
     /**
@@ -118,5 +130,13 @@ class QuestionWithChipsView @JvmOverloads constructor(
     fun setQuestion(question: Question, chipStyleRes: Int) {
         setTitle(question.titleResId)
         setChips(question.options, chipStyleRes, question.singleChoice)
+    }
+
+    fun setBackButtonVisibility(visible: Boolean) {
+        binding.backButton.visibility = if (visible) VISIBLE else GONE
+    }
+
+    fun setSkipButtonVisibility(visible: Boolean) {
+        binding.skipButton.visibility = if (visible) VISIBLE else GONE
     }
 }
