@@ -1,4 +1,4 @@
-package fr.vpm.changingtables.ui.home
+package fr.vpm.changingtables.ui.map
 
 import android.os.Bundle
 import android.util.Log
@@ -8,15 +8,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.mapbox.maps.plugin.annotation.annotations
-import fr.vpm.changingtables.databinding.FragmentHomeBinding
+import fr.vpm.changingtables.databinding.FragmentMapBinding
 import fr.vpm.changingtables.models.Business
 import fr.vpm.changingtables.viewmodels.BusinessViewModel
 
-class HomeFragment : Fragment() {
+class MapFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentMapBinding? = null
 
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val mapViewModel: MapViewModel by activityViewModels()
     private val businessViewModel: BusinessViewModel by activityViewModels()
 
     private var mapManager = MapManager()
@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentMapBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
     }

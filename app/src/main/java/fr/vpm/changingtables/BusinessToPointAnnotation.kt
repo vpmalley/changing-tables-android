@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import fr.vpm.changingtables.models.Business
-import fr.vpm.changingtables.ui.home.MapManager
+import fr.vpm.changingtables.ui.map.MapManager
 
 class BusinessToPointAnnotation() {
 
