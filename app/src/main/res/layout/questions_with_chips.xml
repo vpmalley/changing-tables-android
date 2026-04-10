@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+    android:padding="@dimen/margin_material">
 
     <!-- The title TextView -->
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/chip_selection_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_thin"
-        android:layout_marginTop="@dimen/margin_material"
-        android:layout_marginBottom="@dimen/margin_material"
+        android:layout_marginBottom="@dimen/margin_thin"
         android:textAppearance="?attr/textAppearanceTitleMedium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,12 +24,11 @@
         style="@style/Widget.Material3.Chip.Suggestion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_material"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_thin"
         app:chipSpacingHorizontal="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/chip_selection_title"
         app:selectionRequired="true" />
 
-</merge>
+</androidx.constraintlayout.widget.ConstraintLayout>
