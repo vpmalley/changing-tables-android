@@ -23,6 +23,9 @@ class QuestionWithChipsView @JvmOverloads constructor(
 
     private var selectionListener: OnChipSelectedListener? = null
 
+    var onBackClickListener: (() -> Unit)? = null
+    var onSkipClickListener: (() -> Unit)? = null
+
     init {
         // Inflate the layout and attach it to this view
         val inflater = LayoutInflater.from(context)
@@ -58,6 +61,9 @@ class QuestionWithChipsView @JvmOverloads constructor(
             // Invoke the public listener
             selectionListener?.invoke(checkedIds, selectedTexts, selectedTags)
         }
+
+        binding.backButton.setOnClickListener { onBackClickListener?.invoke() }
+        binding.skipButton.setOnClickListener { onSkipClickListener?.invoke() }
     }
 
     /**
@@ -124,5 +130,13 @@ class QuestionWithChipsView @JvmOverloads constructor(
     fun setQuestion(question: Question, chipStyleRes: Int) {
         setTitle(question.titleResId)
         setChips(question.options, chipStyleRes, question.singleChoice)
+    }
+
+    fun setBackButtonVisibility(visible: Boolean) {
+        binding.backButton.visibility = if (visible) VISIBLE else GONE
+    }
+
+    fun setSkipButtonVisibility(visible: Boolean) {
+        binding.skipButton.visibility = if (visible) VISIBLE else GONE
     }
 }
