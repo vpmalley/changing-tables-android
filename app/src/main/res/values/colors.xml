@@ -23,5 +23,6 @@
     <color name="containerBlue">#84D1EE</color>
     <color name="onContainerBlue">#003543</color>
     <color name="containerOrange">#FFC18E</color>
+    <color name="darkerContainerOrange">#F0B27F</color>
     <color name="onContainerOrange">#4C2700</color>
 </resources>
