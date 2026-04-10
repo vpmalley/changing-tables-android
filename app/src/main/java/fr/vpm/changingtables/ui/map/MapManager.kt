@@ -1,4 +1,4 @@
-package fr.vpm.changingtables.ui.home
+package fr.vpm.changingtables.ui.map
 
 import android.content.Context
 import android.graphics.Bitmap
