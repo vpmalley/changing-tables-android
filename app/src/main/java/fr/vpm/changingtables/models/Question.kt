@@ -16,5 +16,6 @@ class Question {
     var titleResId: Int? = null
     var options: List<Option> = emptyList()
     var singleChoice: Boolean = false
+    var chipStyleRes: Int = com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
 
 }
