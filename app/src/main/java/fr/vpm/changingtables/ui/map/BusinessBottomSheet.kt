@@ -27,6 +27,10 @@ class BusinessBottomSheet(
 ) {
     private val context: Context get() = binding.root.context
 
+    private lateinit var questionsAdapter: QuestionsAdapter
+    private var questions: List<Question> = emptyList()
+    private val answers = mutableMapOf<Int, List<String>>()
+
     fun setupBottomSheet() {
         val bottomSheetLayout = binding.businessLayout
         val behavior = BottomSheetBehavior.from(bottomSheetLayout)
@@ -93,8 +97,7 @@ class BusinessBottomSheet(
         binding.businessTitle.visibility = View.VISIBLE
         binding.addBusinessButton.visibility = View.GONE
         binding.addBusinessButton.isEnabled = false
-        binding.changingTableQuestionWithChips.visibility = View.GONE
-        binding.changingTableLocationQuestionWithChips.visibility = View.GONE
+        binding.questionsViewPager.visibility = View.GONE
 
         binding.businessTitle.text = business?.name
         binding.businessDescription.text = business?.description ?: "Coffee shop"
@@ -168,51 +171,63 @@ class BusinessBottomSheet(
                 Option("out_of_service", R.string.changing_table_out_of_service)
             )
             singleChoice = true
+            chipStyleRes = com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
         }
-        binding.changingTableQuestionWithChips.visibility = View.VISIBLE
-        binding.changingTableQuestionWithChips.setQuestion(
-            changingTableQuestion,
-            com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
-        )
-        binding.changingTableQuestionWithChips.setOnChipSelectedListener { selectedChipIds: List<Int>, selectedChipTexts: List<String>, selectedChipTags: List<String?> ->
-            binding.addBusinessButton.isEnabled = true
-            if (selectedChipTags.any { it == "yes" }) {
-                val changingTableLocationQuestion = Question().apply {
-                    titleResId = R.string.changing_table_location_question
-                    options = listOf(
-                        Option("unisex", R.string.changing_table_unisex_toilet),
-                        Option("male", R.string.changing_table_male_toilet),
-                        Option("female", R.string.changing_table_female_toilet),
-                        Option("accessible", R.string.changing_table_accessible_toilet),
-                        Option("other_room", R.string.changing_table_other_place)
-                    )
-                    singleChoice = false
+        val changingTableLocationQuestion = Question().apply {
+            titleResId = R.string.changing_table_location_question
+            options = listOf(
+                Option("unisex", R.string.changing_table_unisex_toilet),
+                Option("male", R.string.changing_table_male_toilet),
+                Option("female", R.string.changing_table_female_toilet),
+                Option("accessible", R.string.changing_table_accessible_toilet),
+                Option("other_room", R.string.changing_table_other_place)
+            )
+            singleChoice = false
+            chipStyleRes = com.google.android.material.R.style.Widget_Material3_Chip_Filter
+        }
+        questions = listOf(changingTableQuestion, changingTableLocationQuestion)
+        answers.clear()
+
+        questionsAdapter = QuestionsAdapter(
+            questions = questions,
+            onChipSelected = { position, _, selectedTexts, tags ->
+                answers[position] = selectedTexts
+                binding.addBusinessButton.isEnabled = true
+                if (position == 0) {
+                    if (tags.any { it == "yes" }) {
+                        binding.questionsViewPager.currentItem = 1
+                    } else {
+                        // If 'no' or 'out of service', maybe we don't need the location question.
+                        // But for now, we follow the user's request to have them in ViewPager2.
+                        // If we want to skip it, we could just not move or move and it would be empty.
+                    }
                 }
-                binding.changingTableLocationQuestionWithChips.setQuestion(
-                    changingTableLocationQuestion,
-                    com.google.android.material.R.style.Widget_Material3_Chip_Filter
-                )
-                binding.changingTableLocationQuestionWithChips.visibility = View.VISIBLE
-            } else {
-                binding.changingTableLocationQuestionWithChips.visibility = View.GONE
+            },
+            onBackClick = { position ->
+                if (position > 0) {
+                    binding.questionsViewPager.currentItem = position - 1
+                }
+            },
+            onSkipClick = { position ->
+                if (position < questions.size - 1) {
+                    binding.questionsViewPager.currentItem = position + 1
+                }
             }
-        }
+        )
+
+        binding.questionsViewPager.adapter = questionsAdapter
+        binding.questionsViewPager.isUserInputEnabled = false // Only navigate via buttons/selection
+        binding.questionsViewPager.visibility = View.VISIBLE
+
         binding.addBusinessButton.setOnClickListener {
             val newBusiness = Business().apply {
                 name = binding.businessTitleNew.editText?.text?.toString()
-//                description = business?.description
-                // find the location
                 longitude = point.longitude()
                 latitude = point.latitude()
                 rating = -1
-//                type = business?.type
 
-                hasChangingTable =
-                    binding.changingTableQuestionWithChips.getSelectedChipTexts()
-                        .firstOrNull()
-                changingTableLocation =
-                    binding.changingTableLocationQuestionWithChips.getSelectedChipTexts()
-                        .firstOrNull()
+                hasChangingTable = answers[0]?.firstOrNull()
+                changingTableLocation = answers[1]?.firstOrNull()
             }
             businessViewModel.addBusiness(newBusiness)
             val businessName = newBusiness.name ?: "New business"

@@ -159,26 +159,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/amenity_clean" />
 
-    <fr.vpm.changingtables.QuestionWithChipsView
-        android:id="@+id/changing_table_question_with_chips"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_material"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/amenity_diaper_pail"
-        app:questionChipsSingleSelection="true" />
-
-    <fr.vpm.changingtables.QuestionWithChipsView
-        android:id="@+id/changing_table_location_question_with_chips"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/questions_view_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_material"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/changing_table_question_with_chips"
-        app:questionChipsSingleSelection="true" />
+        app:layout_constraintTop_toBottomOf="@id/amenity_diaper_pail" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/add_business_button"
@@ -188,6 +177,6 @@
         android:text="@string/add_business"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/changing_table_location_question_with_chips" />
+        app:layout_constraintTop_toBottomOf="@id/questions_view_pager" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
