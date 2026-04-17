@@ -13,6 +13,9 @@ class Business {
     @JvmField
     var name: String? = null
 
+    /**
+     * Enum that can be one of the following: coffee, restaurant, activity
+     */
     @JvmField
     var type: String? = null
 

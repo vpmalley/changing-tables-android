@@ -32,6 +32,8 @@ class BusinessBottomSheet(
     private var questions: List<Question> = emptyList()
     private val answers = mutableMapOf<Int, List<String>>()
 
+    private var selectedType: String? = null
+
     fun setupBottomSheet() {
         val bottomSheetLayout = binding.businessLayout
         val behavior = BottomSheetBehavior.from(bottomSheetLayout)
@@ -96,6 +98,8 @@ class BusinessBottomSheet(
         binding.businessAddPrompt.visibility = View.GONE
         binding.businessTitleNew.visibility = View.INVISIBLE
         binding.businessTitle.visibility = View.VISIBLE
+        binding.businessDescription.visibility = View.VISIBLE
+        binding.businessTypeSelection.visibility = View.GONE
         binding.addBusinessButton.visibility = View.GONE
         binding.addBusinessButton.isEnabled = false
         binding.questionsViewPager.visibility = View.GONE
@@ -156,6 +160,8 @@ class BusinessBottomSheet(
         binding.businessAddPrompt.visibility = View.VISIBLE
         binding.businessTitleNew.visibility = View.VISIBLE
         binding.businessTitle.visibility = View.GONE
+        binding.businessDescription.visibility = View.GONE
+        binding.businessTypeSelection.visibility = View.VISIBLE
         binding.changingTableDescription.visibility = View.GONE
         binding.businessRating.visibility = View.GONE
         binding.amenityChangingTable.visibility = View.GONE
@@ -163,6 +169,22 @@ class BusinessBottomSheet(
         binding.amenityDiaperPail.visibility = View.GONE
         binding.addBusinessButton.visibility = View.VISIBLE
         binding.addBusinessButton.isEnabled = false
+
+        selectedType = null
+        updateTypeSelectionUI()
+
+        binding.typeCoffee.setOnClickListener {
+            selectedType = "coffee"
+            updateTypeSelectionUI()
+        }
+        binding.typeRestaurant.setOnClickListener {
+            selectedType = "restaurant"
+            updateTypeSelectionUI()
+        }
+        binding.typeActivity.setOnClickListener {
+            selectedType = "activity"
+            updateTypeSelectionUI()
+        }
 
         val changingTableQuestion = Question().apply {
             titleResId = R.string.changing_table_question
@@ -233,6 +255,7 @@ class BusinessBottomSheet(
                 longitude = point.longitude()
                 latitude = point.latitude()
                 rating = -1
+                type = selectedType
 
                 hasChangingTable = answers[0]?.firstOrNull()
                 changingTableLocation = answers[1]?.firstOrNull()
@@ -246,6 +269,22 @@ class BusinessBottomSheet(
         }
     }
 
+
+    private fun updateTypeSelectionUI() {
+        val selectedColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.primaryOrange))
+        val defaultColor = ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.transparent))
+
+        binding.typeCoffee.backgroundTintList = if (selectedType == "coffee") selectedColor else defaultColor
+        binding.typeRestaurant.backgroundTintList = if (selectedType == "restaurant") selectedColor else defaultColor
+        binding.typeActivity.backgroundTintList = if (selectedType == "activity") selectedColor else defaultColor
+
+        val selectedIconTint = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.white))
+        val defaultIconTint = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.black))
+
+        binding.typeCoffee.imageTintList = if (selectedType == "coffee") selectedIconTint else defaultIconTint
+        binding.typeRestaurant.imageTintList = if (selectedType == "restaurant") selectedIconTint else defaultIconTint
+        binding.typeActivity.imageTintList = if (selectedType == "activity") selectedIconTint else defaultIconTint
+    }
 
     private fun displayAmenity(
         view: com.google.android.material.textview.MaterialTextView?,
