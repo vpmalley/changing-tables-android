@@ -85,6 +85,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/business_title_new" />
 
+    <LinearLayout
+        android:id="@+id/business_type_selection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/business_title_new">
+
+        <ImageButton
+            android:id="@+id/type_coffee"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="@dimen/margin_thin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Coffee"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_coffee_24" />
+
+        <ImageButton
+            android:id="@+id/type_restaurant"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="@dimen/margin_thin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Restaurant"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_restaurant_24" />
+
+        <ImageButton
+            android:id="@+id/type_activity"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="@dimen/margin_thin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Activity"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_local_activity_24" />
+
+    </LinearLayout>
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/changing_table_description"
         android:layout_width="match_parent"
