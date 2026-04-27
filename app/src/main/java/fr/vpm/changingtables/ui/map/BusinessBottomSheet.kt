@@ -271,19 +271,9 @@ class BusinessBottomSheet(
 
 
     private fun updateTypeSelectionUI() {
-        val selectedColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.primaryOrange))
-        val defaultColor = ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.transparent))
-
-        binding.typeCoffee.backgroundTintList = if (selectedType == "coffee") selectedColor else defaultColor
-        binding.typeRestaurant.backgroundTintList = if (selectedType == "restaurant") selectedColor else defaultColor
-        binding.typeActivity.backgroundTintList = if (selectedType == "activity") selectedColor else defaultColor
-
-        val selectedIconTint = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.white))
-        val defaultIconTint = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.black))
-
-        binding.typeCoffee.imageTintList = if (selectedType == "coffee") selectedIconTint else defaultIconTint
-        binding.typeRestaurant.imageTintList = if (selectedType == "restaurant") selectedIconTint else defaultIconTint
-        binding.typeActivity.imageTintList = if (selectedType == "activity") selectedIconTint else defaultIconTint
+        binding.typeCoffee.isSelected = selectedType == "coffee"
+        binding.typeRestaurant.isSelected = selectedType == "restaurant"
+        binding.typeActivity.isSelected = selectedType == "activity"
     }
 
     private fun displayAmenity(
