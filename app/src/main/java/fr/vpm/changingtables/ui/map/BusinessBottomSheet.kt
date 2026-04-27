@@ -111,6 +111,7 @@ class BusinessBottomSheet(
         binding.businessRating.numStars = 5
 
         business?.let {
+            binding.amenitiesCard.visibility = View.VISIBLE
             displayAmenity(binding.amenityChangingTable, it.hasChangingTable != "no")
             displayAmenity(binding.amenityClean, it.isClean)
             displayAmenity(binding.amenityDiaperPail, it.hasDiaperPail)
@@ -164,9 +165,7 @@ class BusinessBottomSheet(
         binding.businessTypeSelection.visibility = View.VISIBLE
         binding.changingTableDescription.visibility = View.GONE
         binding.businessRating.visibility = View.GONE
-        binding.amenityChangingTable.visibility = View.GONE
-        binding.amenityClean.visibility = View.GONE
-        binding.amenityDiaperPail.visibility = View.GONE
+        binding.amenitiesCard.visibility = View.GONE
         binding.addBusinessButton.visibility = View.VISIBLE
         binding.addBusinessButton.isEnabled = false
 
@@ -285,7 +284,7 @@ class BusinessBottomSheet(
             val iconRes = if (isAvailable) R.drawable.ic_check_24 else R.drawable.ic_close_24
             it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
             val colorRes =
-                if (isAvailable) R.color.green else R.color.black // Or another color for 'No'
+                if (isAvailable) R.color.green else R.color.onContainerOrange
             TextViewCompat.setCompoundDrawableTintList(
                 it,
                 ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
