@@ -7,6 +7,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.shape.CornerFamily
@@ -218,6 +219,13 @@ class BusinessBottomSheet(
         binding.questionsViewPager.adapter = questionsAdapter
         binding.questionsViewPager.isUserInputEnabled = false // Only navigate via buttons/selection
         binding.questionsViewPager.visibility = View.VISIBLE
+        binding.questionsViewPager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                questionsAdapter.notifyDataSetChanged()
+            }
+        })
 
         binding.addBusinessButton.setOnClickListener {
             val newBusiness = Business().apply {
