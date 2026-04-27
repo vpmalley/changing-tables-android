@@ -168,48 +168,78 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/changing_table_description" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/amenity_changing_table"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/amenities_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_thin"
         android:layout_marginTop="@dimen/margin_large"
-        android:drawablePadding="@dimen/margin_thin"
-        android:gravity="center_vertical"
-        android:text="@string/amenity_changing_table"
-        android:textAppearance="?attr/textAppearanceBody1"
         android:visibility="gone"
+        app:cardBackgroundColor="@color/darkerContainerOrange"
+        app:cardCornerRadius="@dimen/radius_large"
+        app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/business_rating" />
+        app:layout_constraintTop_toBottomOf="@id/business_rating">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/amenity_clean"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_thin"
-        android:drawablePadding="@dimen/margin_thin"
-        android:gravity="center_vertical"
-        android:text="@string/amenity_clean"
-        android:textAppearance="?attr/textAppearanceBody1"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/amenity_changing_table" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/amenity_diaper_pail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_thin"
-        android:drawablePadding="@dimen/margin_thin"
-        android:gravity="center_vertical"
-        android:text="@string/amenity_diaper_pail"
-        android:textAppearance="?attr/textAppearanceBody1"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/amenity_clean" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/amenities_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/margin_thin"
+                android:text="@string/summary"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/amenity_changing_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/margin_thin"
+                android:gravity="center_vertical"
+                android:padding="@dimen/margin_thin"
+                android:text="@string/amenity_changing_table"
+                android:textAppearance="?attr/textAppearanceBody1" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/amenity_clean"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/margin_thin"
+                android:gravity="center_vertical"
+                android:padding="@dimen/margin_thin"
+                android:text="@string/amenity_clean"
+                android:textAppearance="?attr/textAppearanceBody1" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/amenity_diaper_pail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/margin_thin"
+                android:gravity="center_vertical"
+                android:padding="@dimen/margin_thin"
+                android:text="@string/amenity_diaper_pail"
+                android:textAppearance="?attr/textAppearanceBody1" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/questions_view_pager"
@@ -220,7 +250,7 @@
         app:layout_constraintBottom_toTopOf="@+id/add_business_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/business_type_selection" />
+        app:layout_constraintTop_toBottomOf="@id/amenities_card" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/add_business_button"
