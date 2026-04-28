@@ -200,7 +200,7 @@
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:dividerColor="@color/primaryOrange" />
+                app:dividerColor="@color/containerOrange" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/amenity_changing_table"
@@ -215,7 +215,7 @@
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:dividerColor="@color/primaryOrange" />
+                app:dividerColor="@color/containerOrange" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/amenity_clean"
@@ -230,7 +230,7 @@
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:dividerColor="@color/primaryOrange" />
+                app:dividerColor="@color/containerOrange" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/amenity_diaper_pail"
