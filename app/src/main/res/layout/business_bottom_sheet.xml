@@ -178,6 +178,7 @@
         app:cardBackgroundColor="@color/darkerContainerOrange"
         app:cardCornerRadius="@dimen/radius_large"
         app:cardElevation="0dp"
+        app:strokeWidth="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/business_rating">
@@ -198,7 +199,8 @@
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:dividerColor="@color/primaryOrange" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/amenity_changing_table"
@@ -212,7 +214,8 @@
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:dividerColor="@color/primaryOrange" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/amenity_clean"
@@ -226,7 +229,8 @@
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:dividerColor="@color/primaryOrange" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/amenity_diaper_pail"
