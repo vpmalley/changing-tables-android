@@ -28,21 +28,30 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_material"
             android:textAppearance="?attr/textAppearanceTitleMedium"
-            app:layout_constraintEnd_toStartOf="@id/changing_table_icon"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/business_type_icon"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/changing_table_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/baby_changing_station_green_24"
-            android:visibility="gone"
+        <LinearLayout
+            android:id="@+id/amenities_icons_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/green" />
+            app:layout_constraintStart_toStartOf="@id/business_name"
+            app:layout_constraintTop_toBottomOf="@id/business_name">
+
+            <ImageView
+                android:id="@+id/changing_table_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/baby_changing_station_green_24"
+                android:visibility="gone"
+                app:tint="@color/green" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

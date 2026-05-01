@@ -36,6 +36,8 @@ class SavedFragment : Fragment() {
 
         businessViewModel.savedBusinesses.observe(viewLifecycleOwner) { businesses ->
             adapter.submitList(businesses)
+            binding.emptyStateText.visibility = if (businesses.isNullOrEmpty()) View.VISIBLE else View.GONE
+            binding.savedRecyclerView.visibility = if (businesses.isNullOrEmpty()) View.GONE else View.VISIBLE
         }
     }
 
