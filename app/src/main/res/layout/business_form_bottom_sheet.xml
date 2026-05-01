@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/business_form_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/margin_material"
+    app:behavior_fitToContents="false"
+    app:behavior_halfExpandedRatio="0.5"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="240dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <View
+        android:id="@+id/drag_handle"
+        android:layout_width="32dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/business_add_prompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_material"
+        android:gravity="center_vertical|start"
+        android:paddingBottom="@dimen/margin_thin"
+        android:text="@string/business_add_prompt"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/drag_handle" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/business_title_new"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_material"
+        android:gravity="center_vertical|start"
+        android:hint="@string/business_name_label"
+        android:paddingBottom="@dimen/margin_thin"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/business_add_prompt">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/business_title_new_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/business_type_selection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/business_title_new">
+
+        <ImageButton
+            android:id="@+id/type_coffee"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="@dimen/margin_thin"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/business_type_background_selector"
+            android:contentDescription="Coffee"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_coffee_24"
+            app:tint="@color/business_type_icon_selector" />
+
+        <ImageButton
+            android:id="@+id/type_restaurant"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="@dimen/margin_thin"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/business_type_background_selector"
+            android:contentDescription="Restaurant"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_restaurant_24"
+            app:tint="@color/business_type_icon_selector" />
+
+        <ImageButton
+            android:id="@+id/type_activity"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="@dimen/margin_thin"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/business_type_background_selector"
+            android:contentDescription="Activity"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_local_activity_24"
+            app:tint="@color/business_type_icon_selector" />
+
+    </LinearLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/questions_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_material"
+        app:layout_constraintBottom_toTopOf="@+id/add_business_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/business_type_selection" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/add_business_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_material"
+        android:text="@string/add_business"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/questions_view_pager" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

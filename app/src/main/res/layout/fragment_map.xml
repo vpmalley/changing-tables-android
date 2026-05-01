@@ -27,8 +27,13 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
-        android:id="@+id/businessBottomSheet"
-        layout="@layout/business_bottom_sheet"
+        android:id="@+id/businessDetailsBottomSheet"
+        layout="@layout/business_details_bottom_sheet"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/businessFormBottomSheet"
+        layout="@layout/business_form_bottom_sheet"
         android:visibility="gone" />
 
     <LinearLayout
