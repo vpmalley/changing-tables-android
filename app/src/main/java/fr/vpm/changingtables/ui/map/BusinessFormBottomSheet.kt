@@ -5,8 +5,6 @@ import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.widget.TextViewCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
@@ -15,14 +13,14 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.mapbox.geojson.Point
 import fr.vpm.changingtables.R
-import fr.vpm.changingtables.databinding.BusinessBottomSheetBinding
+import fr.vpm.changingtables.databinding.BusinessFormBottomSheetBinding
 import fr.vpm.changingtables.models.Business
 import fr.vpm.changingtables.models.Option
 import fr.vpm.changingtables.models.Question
 import fr.vpm.changingtables.viewmodels.BusinessViewModel
 
-class BusinessBottomSheet(
-    private val binding: BusinessBottomSheetBinding,
+class BusinessFormBottomSheet(
+    private val binding: BusinessFormBottomSheetBinding,
     private val businessViewModel: BusinessViewModel,
     private val mapManager: MapManager
 ) {
@@ -33,13 +31,15 @@ class BusinessBottomSheet(
     private val answers = mutableMapOf<Int, List<String>>()
 
     private var selectedType: String? = null
+    private lateinit var backgroundDrawable: MaterialShapeDrawable
+    private var cornerRadius: Float = 0f
 
     fun setupBottomSheet() {
-        val bottomSheetLayout = binding.businessLayout
+        val bottomSheetLayout = binding.businessFormLayout
         val behavior = BottomSheetBehavior.from(bottomSheetLayout)
         val initialPeekHeight = behavior.peekHeight
 
-        val cornerRadius = TypedValue.applyDimension(
+        cornerRadius = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             28f,
             context.resources.displayMetrics
@@ -58,7 +58,7 @@ class BusinessBottomSheet(
         )
         val colorSurface = typedValue.data
 
-        val backgroundDrawable = MaterialShapeDrawable(shapeAppearanceModel).apply {
+        backgroundDrawable = MaterialShapeDrawable(shapeAppearanceModel).apply {
             fillColor = ColorStateList.valueOf(colorSurface)
         }
         bottomSheetLayout.background = backgroundDrawable
@@ -73,8 +73,6 @@ class BusinessBottomSheet(
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 val parentHeight = bottomSheet.parent.let { (it as View).height }.toFloat()
                 if (parentHeight > 0) {
-                    // Interpolation: 0 at the top (square), 1 when far from top (rounded)
-                    // Animation happens when the sheet is within 2 * cornerRadius from the top
                     val threshold = cornerRadius * 2
                     val interpolation = (bottomSheet.top.toFloat() / threshold).coerceIn(0f, 1f)
                     backgroundDrawable.interpolation = interpolation
@@ -88,85 +86,14 @@ class BusinessBottomSheet(
         })
     }
 
-    fun showBusiness(business: Business?) {
-        mapManager.clearNewBusinessMarker()
-        binding.businessLayout.visibility = View.VISIBLE
-        val bottomSheetLayout: ConstraintLayout = binding.businessLayout
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
-        binding.businessAddPrompt.visibility = View.GONE
-        binding.businessTitleNew.visibility = View.INVISIBLE
-        binding.businessTitle.visibility = View.VISIBLE
-        binding.businessDescription.visibility = View.VISIBLE
-        binding.businessTypeSelection.visibility = View.GONE
-        binding.addBusinessButton.visibility = View.GONE
-        binding.addBusinessButton.isEnabled = false
-        binding.questionsViewPager.visibility = View.GONE
-
-        binding.businessTitle.text = business?.name
-        binding.businessDescription.text = business?.description ?: "Coffee shop"
-        binding.businessRating.visibility = View.GONE
-        binding.businessRating.rating = business?.ratingAsFloat ?: 0f
-        binding.businessRating.numStars = 5
-
-        business?.let {
-            binding.amenitiesCard.visibility = View.VISIBLE
-            displayAmenity(binding.amenityChangingTable, it.hasChangingTable != "no")
-            displayAmenity(binding.amenityClean, it.isClean)
-            displayAmenity(binding.amenityDiaperPail, it.hasDiaperPail)
-        }
-
-//        if (business?.hasChangingTable == "Yes") {
-//            binding.changingTableDescription.let {
-//                it.visibility = View.VISIBLE
-//                it.text = "There is a changing table here"
-//                TextViewCompat.setCompoundDrawableTintList(
-//                    it, ColorStateList.valueOf(
-//                        ContextCompat.getColor(context, R.color.green)
-//                    )
-//                )
-//            }
-//        } else if (business?.hasChangingTable == "OutOfService") {
-//            binding.changingTableDescription.let {
-//                it.visibility = View.VISIBLE
-//                it.text = "Changing table is out of service"
-//                TextViewCompat.setCompoundDrawableTintList(
-//                    it, ColorStateList.valueOf(
-//                        ContextCompat.getColor(context, R.color.purple_500)
-//                    )
-//                )
-//            }
-//        } else {
-//            binding.changingTableDescription.visibility = View.VISIBLE
-//            binding.changingTableDescription.text = "No changing table"
-//            binding.changingTableDescription.let {
-//                TextViewCompat.setCompoundDrawableTintList(
-//                    it, ColorStateList.valueOf(
-//                        ContextCompat.getColor(context, R.color.black)
-//                    )
-//                )
-//            }
-//        }
-    }
-
     fun showNewBusiness(point: Point) {
         mapManager.clearNewBusinessMarker()
         mapManager.showNewBusinessMarker(context, point)
-        binding.businessLayout.visibility = View.VISIBLE
-        val bottomSheetLayout: ConstraintLayout = binding.businessLayout
+        binding.businessFormLayout.visibility = View.VISIBLE
+        val bottomSheetLayout: ConstraintLayout = binding.businessFormLayout
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        binding.businessAddPrompt.visibility = View.VISIBLE
-        binding.businessTitleNew.visibility = View.VISIBLE
-        binding.businessTitle.visibility = View.GONE
-        binding.businessDescription.visibility = View.GONE
-        binding.businessTypeSelection.visibility = View.VISIBLE
-        binding.changingTableDescription.visibility = View.GONE
-        binding.businessRating.visibility = View.GONE
-        binding.amenitiesCard.visibility = View.GONE
-        binding.addBusinessButton.visibility = View.VISIBLE
         binding.addBusinessButton.isEnabled = false
 
         selectedType = null
@@ -218,10 +145,6 @@ class BusinessBottomSheet(
                 if (position == 0) {
                     if (tags.any { it == "yes" }) {
                         binding.questionsViewPager.currentItem = 1
-                    } else {
-                        // If 'no' or 'out of service', maybe we don't need the location question.
-                        // But for now, we follow the user's request to have them in ViewPager2.
-                        // If we want to skip it, we could just not move or move and it would be empty.
                     }
                 }
             },
@@ -238,8 +161,7 @@ class BusinessBottomSheet(
         )
 
         binding.questionsViewPager.adapter = questionsAdapter
-        binding.questionsViewPager.isUserInputEnabled = false // Only navigate via buttons/selection
-        binding.questionsViewPager.visibility = View.VISIBLE
+        binding.questionsViewPager.isUserInputEnabled = false
         binding.questionsViewPager.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -268,27 +190,14 @@ class BusinessBottomSheet(
         }
     }
 
-
     private fun updateTypeSelectionUI() {
         binding.typeCoffee.isSelected = selectedType == "coffee"
         binding.typeRestaurant.isSelected = selectedType == "restaurant"
         binding.typeActivity.isSelected = selectedType == "activity"
     }
 
-    private fun displayAmenity(
-        view: com.google.android.material.textview.MaterialTextView?,
-        isAvailable: Boolean
-    ) {
-        view?.let {
-            it.visibility = View.VISIBLE
-            val iconRes = if (isAvailable) R.drawable.ic_check_24 else R.drawable.ic_close_24
-            it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
-            val colorRes =
-                if (isAvailable) R.color.green else R.color.onContainerOrange
-            TextViewCompat.setCompoundDrawableTintList(
-                it,
-                ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
-            )
-        }
+    fun hide() {
+        val behavior = BottomSheetBehavior.from(binding.businessFormLayout)
+        behavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 }

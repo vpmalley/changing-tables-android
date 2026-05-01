@@ -20,7 +20,8 @@ class MapFragment : Fragment() {
     private val businessViewModel: BusinessViewModel by activityViewModels()
 
     private var mapManager = MapManager()
-    private lateinit var businessBottomSheet: BusinessBottomSheet
+    private lateinit var businessDetailsBottomSheet: BusinessDetailsBottomSheet
+    private lateinit var businessFormBottomSheet: BusinessFormBottomSheet
 
     private var isFilterExpanded = false
 
@@ -42,19 +43,30 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        businessBottomSheet = BusinessBottomSheet(
-            binding.businessBottomSheet,
+        businessDetailsBottomSheet = BusinessDetailsBottomSheet(
+            binding.businessDetailsBottomSheet,
+            mapManager
+        )
+        businessDetailsBottomSheet.setupBottomSheet()
+
+        businessFormBottomSheet = BusinessFormBottomSheet(
+            binding.businessFormBottomSheet,
             businessViewModel,
             mapManager
         )
-        businessBottomSheet.setupBottomSheet()
+        businessFormBottomSheet.setupBottomSheet()
 
         setupFilterFab()
         mapManager.setupPointAnnotationManager(
-            binding.mapView.annotations,
-            businessBottomSheet::showBusiness
-        )
-        mapManager.setupAddingBusiness(binding.mapView, businessBottomSheet::showNewBusiness)
+            binding.mapView.annotations
+        ) { business ->
+            businessFormBottomSheet.hide()
+            businessDetailsBottomSheet.showBusiness(business)
+        }
+        mapManager.setupAddingBusiness(binding.mapView) { point ->
+            businessDetailsBottomSheet.hide()
+            businessFormBottomSheet.showNewBusiness(point)
+        }
 
         businessViewModel.businesses.observe(viewLifecycleOwner, ::onBusinesses)
     }
