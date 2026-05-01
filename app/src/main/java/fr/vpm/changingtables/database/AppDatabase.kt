@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import fr.vpm.changingtables.models.Business
 import java.util.concurrent.Executors
 
-@Database(entities = [Business::class], version = 3, exportSchema = false)
+@Database(entities = [Business::class], version = 4, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun businessDao(): BusinessDao

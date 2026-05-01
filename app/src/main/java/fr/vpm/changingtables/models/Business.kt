@@ -55,6 +55,9 @@ class Business {
     @JvmField
     var photoUrls: List<String> = emptyList()
 
+    @JvmField
+    var savedOnDevice: Long? = null
+
     @get:Ignore
     val ratingAsFloat: Float
         get() = if (rating < 0) 0f else rating.toFloat()

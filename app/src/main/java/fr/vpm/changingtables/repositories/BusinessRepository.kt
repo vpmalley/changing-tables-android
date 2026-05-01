@@ -10,6 +10,8 @@ class BusinessRepository(private val businessDao: BusinessDao) {
 
     val allBusinesses: LiveData<List<Business>> = businessDao.getAll()
 
+    val savedBusinesses: LiveData<List<Business>> = businessDao.getSavedOnDevice()
+
     fun findByLocation(lat: Double, lon: Double): LiveData<List<Business>> {
         return businessDao.findByLocation(lat, lon)
     }

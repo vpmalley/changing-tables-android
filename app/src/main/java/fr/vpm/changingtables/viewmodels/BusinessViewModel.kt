@@ -13,11 +13,13 @@ class BusinessViewModel(application: Application) : AndroidViewModel(application
 
     private val repository: BusinessRepository
     val businesses: LiveData<List<Business>>
+    val savedBusinesses: LiveData<List<Business>>
 
     init {
         val businessDao = AppDatabase.getDatabase(application).businessDao()
         repository = BusinessRepository(businessDao)
         businesses = repository.allBusinesses
+        savedBusinesses = repository.savedBusinesses
     }
 
     fun addBusiness(business: Business) = viewModelScope.launch {

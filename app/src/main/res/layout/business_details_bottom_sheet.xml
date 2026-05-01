@@ -23,16 +23,28 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/business_title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_material"
         android:gravity="center_vertical|start"
         android:paddingBottom="@dimen/margin_thin"
         android:text="@string/business_name_label"
         android:textAppearance="?attr/textAppearanceHeadline6"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/save_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/drag_handle" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/save_button"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_material"
+        app:icon="@drawable/ic_bookmark_24dp"
+        app:iconTint="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@id/business_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/business_title" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/business_description"

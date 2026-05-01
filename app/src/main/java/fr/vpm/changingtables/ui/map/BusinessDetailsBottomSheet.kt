@@ -22,6 +22,7 @@ class BusinessDetailsBottomSheet(
     private val context: Context get() = binding.root.context
     private lateinit var backgroundDrawable: MaterialShapeDrawable
     private var cornerRadius: Float = 0f
+    var onSaveListener: ((Business) -> Unit)? = null
 
     fun setupBottomSheet() {
         val bottomSheetLayout = binding.businessDetailsLayout
@@ -87,6 +88,10 @@ class BusinessDetailsBottomSheet(
         binding.businessRating.visibility = View.GONE
         binding.businessRating.rating = business?.ratingAsFloat ?: 0f
         binding.businessRating.numStars = 5
+
+        binding.saveButton.setOnClickListener {
+            business?.let { onSaveListener?.invoke(it) }
+        }
 
         business?.let {
             binding.amenitiesCard.visibility = View.VISIBLE

@@ -4,14 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import fr.vpm.changingtables.databinding.FragmentSavedBinding
+import fr.vpm.changingtables.viewmodels.BusinessViewModel
 
 class SavedFragment : Fragment() {
 
     private var _binding: FragmentSavedBinding? = null
+
+    private val businessViewModel: BusinessViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,17 +24,19 @@ class SavedFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val savedViewModel =
-            ViewModelProvider(this).get(SavedViewModel::class.java)
-
         _binding = FragmentSavedBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textSaved
-        savedViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val adapter = SavedBusinessesAdapter()
+        binding.savedRecyclerView.adapter = adapter
+
+        businessViewModel.savedBusinesses.observe(viewLifecycleOwner) { businesses ->
+            adapter.submitList(businesses)
         }
-        return root
     }
 
     override fun onDestroyView() {
