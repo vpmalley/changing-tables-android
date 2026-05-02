@@ -22,6 +22,7 @@ class BusinessDetailsBottomSheet(
     private val context: Context get() = binding.root.context
     private lateinit var backgroundDrawable: MaterialShapeDrawable
     private var cornerRadius: Float = 0f
+    var onSaveListener: ((Business) -> Unit)? = null
 
     fun setupBottomSheet() {
         val bottomSheetLayout = binding.businessDetailsLayout
@@ -88,6 +89,14 @@ class BusinessDetailsBottomSheet(
         binding.businessRating.rating = business?.ratingAsFloat ?: 0f
         binding.businessRating.numStars = 5
 
+        updateSaveButtonIcon(business?.savedOnDevice != null)
+        binding.saveButton.setOnClickListener {
+            business?.let {
+                onSaveListener?.invoke(it)
+                updateSaveButtonIcon(true)
+            }
+        }
+
         business?.let {
             binding.amenitiesCard.visibility = View.VISIBLE
             displayAmenity(binding.amenityChangingTable, it.hasChangingTable != "no")
@@ -111,6 +120,11 @@ class BusinessDetailsBottomSheet(
                 ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
             )
         }
+    }
+
+    private fun updateSaveButtonIcon(isSaved: Boolean) {
+        val iconRes = if (isSaved) R.drawable.ic_bookmark_24dp else R.drawable.ic_bookmark_border_24dp
+        binding.saveButton.setIconResource(iconRes)
     }
 
     fun hide() {

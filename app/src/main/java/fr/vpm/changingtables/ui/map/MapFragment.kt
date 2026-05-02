@@ -48,6 +48,10 @@ class MapFragment : Fragment() {
             mapManager
         )
         businessDetailsBottomSheet.setupBottomSheet()
+        businessDetailsBottomSheet.onSaveListener = { business ->
+            business.savedOnDevice = System.currentTimeMillis()
+            businessViewModel.addBusiness(business)
+        }
 
         businessFormBottomSheet = BusinessFormBottomSheet(
             binding.businessFormBottomSheet,

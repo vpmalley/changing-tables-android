@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         val navController = navHostFragment.navController
 
+        setSupportActionBar(binding.toolbar)
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
@@ -33,7 +35,15 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_map, R.id.navigation_saved, R.id.navigation_notifications
             )
         )
-//        setupActionBarWithNavController(navController, appBarConfiguration)
+        setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.navigation_map) {
+                binding.appBar.visibility = android.view.View.GONE
+            } else {
+                binding.appBar.visibility = android.view.View.VISIBLE
+            }
+        }
     }
 }

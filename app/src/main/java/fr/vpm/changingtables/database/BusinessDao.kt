@@ -18,6 +18,9 @@ interface BusinessDao {
     @Query("SELECT * FROM businesses WHERE area = :area")
     fun findByArea(area: String): LiveData<List<Business>>
 
+    @Query("SELECT * FROM businesses WHERE savedOnDevice IS NOT NULL ORDER BY savedOnDevice DESC")
+    fun getSavedOnDevice(): LiveData<List<Business>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(business: Business)
 
