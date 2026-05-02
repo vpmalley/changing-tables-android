@@ -77,6 +77,7 @@ class BusinessDetailsBottomSheet(
     }
 
     fun showBusiness(business: Business?) {
+        binding.root.tag = business
         mapManager.clearNewBusinessMarker()
         binding.businessDetailsLayout.visibility = View.VISIBLE
         val bottomSheetLayout: ConstraintLayout = binding.businessDetailsLayout
@@ -93,7 +94,6 @@ class BusinessDetailsBottomSheet(
         binding.saveButton.setOnClickListener {
             business?.let {
                 onSaveListener?.invoke(it)
-                updateSaveButtonIcon(true)
             }
         }
 
@@ -123,12 +123,24 @@ class BusinessDetailsBottomSheet(
     }
 
     private fun updateSaveButtonIcon(isSaved: Boolean) {
-        val iconRes = if (isSaved) R.drawable.ic_bookmark_24dp else R.drawable.ic_bookmark_border_24dp
+        val iconRes =
+            if (isSaved) R.drawable.ic_bookmark_24dp else R.drawable.ic_bookmark_border_24dp
         binding.saveButton.setIconResource(iconRes)
     }
 
     fun hide() {
         val behavior = BottomSheetBehavior.from(binding.businessDetailsLayout)
         behavior.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    /**
+     * Refresh a business if one is currently displayed
+     */
+    fun refreshBusiness(businesses: List<Business>?) {
+        (binding.root.tag as? Business)?.let { business ->
+            businesses?.firstOrNull { business.id == it.id }?.let {
+                showBusiness(it)
+            }
+        }
     }
 }
