@@ -2,6 +2,8 @@ package fr.vpm.changingtables.ui.map
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -95,21 +97,33 @@ class BusinessFormBottomSheet(
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         binding.addBusinessButton.isEnabled = false
+        binding.businessTitleNew.editText?.setText("")
 
         selectedType = null
         updateTypeSelectionUI()
 
+        binding.businessTitleNew.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateAddButtonState()
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
         binding.typeCoffee.setOnClickListener {
             selectedType = "coffee"
             updateTypeSelectionUI()
+            updateAddButtonState()
         }
         binding.typeRestaurant.setOnClickListener {
             selectedType = "restaurant"
             updateTypeSelectionUI()
+            updateAddButtonState()
         }
         binding.typeActivity.setOnClickListener {
             selectedType = "activity"
             updateTypeSelectionUI()
+            updateAddButtonState()
         }
 
         val changingTableQuestion = Question().apply {
@@ -141,7 +155,7 @@ class BusinessFormBottomSheet(
             questions = questions,
             onChipSelected = { position, _, selectedTexts, tags ->
                 answers[position] = selectedTexts
-                binding.addBusinessButton.isEnabled = true
+                updateAddButtonState()
                 if (position == 0) {
                     if (tags.any { it == "yes" }) {
                         binding.questionsViewPager.currentItem = 1
@@ -194,6 +208,13 @@ class BusinessFormBottomSheet(
         binding.typeCoffee.isSelected = selectedType == "coffee"
         binding.typeRestaurant.isSelected = selectedType == "restaurant"
         binding.typeActivity.isSelected = selectedType == "activity"
+    }
+
+    private fun updateAddButtonState() {
+        val name = binding.businessTitleNew.editText?.text?.toString() ?: ""
+        val isNameValid = name.isNotBlank() && name.length <= 50
+        val isTypeValid = selectedType != null
+        binding.addBusinessButton.isEnabled = isNameValid && isTypeValid
     }
 
     fun hide() {

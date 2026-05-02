@@ -1,0 +1,3 @@
+## 2025-05-14 - Form Validation and Accessibility Contrast
+**Learning:** In multi-step forms like the "Add Business" flow, validating essential data (name and type) early and providing visual feedback (character counter, button state) prevents data entry errors and improves the overall experience. Additionally, using theme-aware colors like `?attr/colorOnSurface` for icons on colored backgrounds (like the orange bottom sheet) ensures sufficient contrast and accessibility.
+**Action:** Always ensure that submission buttons are only enabled when mandatory fields are valid and use high-contrast text/icon colors on surface containers.

@@ -83,7 +83,22 @@ class BusinessDetailsBottomSheet(
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         binding.businessTitle.text = business?.name
-        binding.businessDescription.text = business?.description ?: "Coffee shop"
+
+        val typeIcon = when (business?.type) {
+            "coffee" -> R.drawable.ic_coffee_24
+            "restaurant" -> R.drawable.ic_restaurant_24
+            "activity" -> R.drawable.ic_local_activity_24
+            else -> R.drawable.ic_coffee_24
+        }
+        val typeText = when (business?.type) {
+            "coffee" -> context.getString(R.string.coffee)
+            "restaurant" -> context.getString(R.string.restaurant)
+            "activity" -> context.getString(R.string.activity)
+            else -> context.getString(R.string.coffee)
+        }
+        binding.businessDescription.setCompoundDrawablesWithIntrinsicBounds(typeIcon, 0, 0, 0)
+        binding.businessDescription.text = typeText
+
         binding.businessRating.visibility = View.GONE
         binding.businessRating.rating = business?.ratingAsFloat ?: 0f
         binding.businessRating.numStars = 5
