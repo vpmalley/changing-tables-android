@@ -30,9 +30,6 @@ interface BusinessDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(businesses: List<Business>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(business: Business)
-
     @Query("DELETE FROM businesses")
     suspend fun deleteAll()
 }

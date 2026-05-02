@@ -27,8 +27,4 @@ class BusinessRepository(private val businessDao: BusinessDao) {
     suspend fun insertAll(businesses: List<Business>) = withContext(Dispatchers.IO) {
         businessDao.insertAll(businesses)
     }
-
-    suspend fun update(business: Business) = withContext(Dispatchers.IO) {
-        businessDao.update(business)
-    }
 }

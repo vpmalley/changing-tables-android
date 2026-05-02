@@ -49,7 +49,8 @@ class MapFragment : Fragment() {
         )
         businessDetailsBottomSheet.setupBottomSheet()
         businessDetailsBottomSheet.onSaveListener = { business ->
-            businessViewModel.saveBusiness(business)
+            business.savedOnDevice = System.currentTimeMillis()
+            businessViewModel.addBusiness(business)
         }
 
         businessFormBottomSheet = BusinessFormBottomSheet(
@@ -116,8 +117,6 @@ class MapFragment : Fragment() {
     private fun onBusinesses(businesses: List<Business>?) {
         Log.d("businessViewModel", "all businesses to display are : $businesses")
         mapManager.showBusinesses(requireContext(), businesses)
-        // TODO update bottom sheet
-        businessDetailsBottomSheet.refreshBusiness(businesses)
     }
 
     override fun onDestroyView() {

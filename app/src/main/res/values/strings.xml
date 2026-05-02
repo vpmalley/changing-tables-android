@@ -24,7 +24,7 @@
     <string name="amenity_changing_table">Changing table</string>
     <string name="amenity_clean">Clean</string>
     <string name="amenity_diaper_pail">Diaper pail</string>
-    <string name="business_summary_title">Parents review</string>
+    <string name="summary">Summary</string>
     <string name="all_back">Back</string>
     <string name="all_skip">Skip</string>
 </resources>

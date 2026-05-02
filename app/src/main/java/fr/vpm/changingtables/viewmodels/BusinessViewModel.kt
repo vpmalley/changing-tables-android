@@ -8,7 +8,6 @@ import fr.vpm.changingtables.database.AppDatabase
 import fr.vpm.changingtables.models.Business
 import fr.vpm.changingtables.repositories.BusinessRepository
 import kotlinx.coroutines.launch
-import java.util.Date
 
 class BusinessViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -33,15 +32,6 @@ class BusinessViewModel(application: Application) : AndroidViewModel(application
 
     fun getByLocation(lat: Double, lon: Double): LiveData<List<Business>> {
         return repository.findByLocation(lat, lon)
-    }
-
-    fun saveBusiness(business: Business) = viewModelScope.launch {
-        if (business.savedOnDevice != null) {
-            business.savedOnDevice = null
-        } else {
-            business.savedOnDevice = Date().time
-        }
-        repository.update(business)
     }
 
 }
