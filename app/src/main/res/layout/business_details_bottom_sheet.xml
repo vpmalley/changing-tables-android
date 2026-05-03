@@ -17,6 +17,7 @@
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:background="@android:color/darker_gray"
+        android:contentDescription="Drag handle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

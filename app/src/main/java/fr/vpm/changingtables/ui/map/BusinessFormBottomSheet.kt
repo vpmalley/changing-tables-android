@@ -2,6 +2,8 @@ package fr.vpm.changingtables.ui.map
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -94,22 +96,33 @@ class BusinessFormBottomSheet(
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        binding.addBusinessButton.isEnabled = false
-
+        binding.businessTitleNew.editText?.setText("")
         selectedType = null
+        validateInput()
         updateTypeSelectionUI()
+
+        binding.businessTitleNew.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateInput()
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         binding.typeCoffee.setOnClickListener {
             selectedType = "coffee"
             updateTypeSelectionUI()
+            validateInput()
         }
         binding.typeRestaurant.setOnClickListener {
             selectedType = "restaurant"
             updateTypeSelectionUI()
+            validateInput()
         }
         binding.typeActivity.setOnClickListener {
             selectedType = "activity"
             updateTypeSelectionUI()
+            validateInput()
         }
 
         val changingTableQuestion = Question().apply {
@@ -141,7 +154,7 @@ class BusinessFormBottomSheet(
             questions = questions,
             onChipSelected = { position, _, selectedTexts, tags ->
                 answers[position] = selectedTexts
-                binding.addBusinessButton.isEnabled = true
+                validateInput()
                 if (position == 0) {
                     if (tags.any { it == "yes" }) {
                         binding.questionsViewPager.currentItem = 1
@@ -188,6 +201,11 @@ class BusinessFormBottomSheet(
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             mapManager.clearNewBusinessMarker()
         }
+    }
+
+    private fun validateInput() {
+        val name = binding.businessTitleNew.editText?.text?.toString()
+        binding.addBusinessButton.isEnabled = !name.isNullOrBlank() && selectedType != null
     }
 
     private fun updateTypeSelectionUI() {

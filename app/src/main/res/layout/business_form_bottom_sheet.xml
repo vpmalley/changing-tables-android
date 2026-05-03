@@ -17,6 +17,7 @@
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:background="@android:color/darker_gray"
+        android:contentDescription="Drag handle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -43,6 +44,8 @@
         android:hint="@string/business_name_label"
         android:paddingBottom="@dimen/margin_thin"
         android:textAppearance="?attr/textAppearanceHeadline6"
+        app:counterEnabled="true"
+        app:counterMaxLength="50"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/business_add_prompt">
@@ -50,7 +53,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/business_title_new_edit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:maxLength="50" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
@@ -70,7 +74,7 @@
             android:layout_margin="@dimen/margin_thin"
             android:background="@drawable/circle_background"
             android:backgroundTint="@color/business_type_background_selector"
-            android:contentDescription="Coffee"
+            android:contentDescription="@string/coffee"
             android:padding="8dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_coffee_24"
@@ -83,7 +87,7 @@
             android:layout_margin="@dimen/margin_thin"
             android:background="@drawable/circle_background"
             android:backgroundTint="@color/business_type_background_selector"
-            android:contentDescription="Restaurant"
+            android:contentDescription="@string/restaurant"
             android:padding="8dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_restaurant_24"
@@ -96,7 +100,7 @@
             android:layout_margin="@dimen/margin_thin"
             android:background="@drawable/circle_background"
             android:backgroundTint="@color/business_type_background_selector"
-            android:contentDescription="Activity"
+            android:contentDescription="@string/activity"
             android:padding="8dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_local_activity_24"
