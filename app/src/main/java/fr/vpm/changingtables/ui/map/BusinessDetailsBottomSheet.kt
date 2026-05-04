@@ -76,40 +76,53 @@ class BusinessDetailsBottomSheet(
     }
 
     fun showBusiness(business: Business?) {
+        if (business == null) return
         mapManager.clearNewBusinessMarker()
         binding.businessDetailsLayout.visibility = View.VISIBLE
-        val bottomSheetLayout: ConstraintLayout = binding.businessDetailsLayout
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        val behavior = BottomSheetBehavior.from(binding.businessDetailsLayout)
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        binding.businessTitle.text = business?.name
-        binding.businessDescription.text = business?.description ?: "Coffee shop"
-        binding.businessRating.visibility = View.GONE
-        binding.businessRating.rating = business?.ratingAsFloat ?: 0f
-        binding.businessRating.numStars = 5
-
-        business?.let {
-            binding.amenitiesCard.visibility = View.VISIBLE
-            displayAmenity(binding.amenityChangingTable, it.hasChangingTable != "no")
-            displayAmenity(binding.amenityClean, it.isClean)
-            displayAmenity(binding.amenityDiaperPail, it.hasDiaperPail)
+        binding.businessTitle.text = business.name
+        val (typeIcon, typeText) = when (business.type) {
+            "coffee" -> Pair(R.drawable.ic_coffee_24, context.getString(R.string.coffee))
+            "restaurant" -> Pair(R.drawable.ic_restaurant_24, context.getString(R.string.restaurant))
+            "activity" -> Pair(R.drawable.ic_local_activity_24, context.getString(R.string.activity))
+            else -> Pair(R.drawable.ic_coffee_24, business.description ?: context.getString(R.string.coffee))
         }
+        binding.businessDescription.text = typeText
+        binding.businessDescription.setCompoundDrawablesWithIntrinsicBounds(typeIcon, 0, 0, 0)
+
+        val locationRes = when (business.changingTableLocation) {
+            "unisex" -> R.string.changing_table_unisex_toilet
+            "male" -> R.string.changing_table_male_toilet
+            "female" -> R.string.changing_table_female_toilet
+            "accessible" -> R.string.changing_table_accessible_toilet
+            "other_room" -> R.string.changing_table_other_place
+            else -> null
+        }
+        binding.changingTableDescription.visibility = if (locationRes != null) View.VISIBLE else View.GONE
+        locationRes?.let { binding.changingTableDescription.setText(it) }
+
+        binding.businessRating.visibility = if (business.rating > 0) View.VISIBLE else View.GONE
+        binding.businessRating.rating = business.ratingAsFloat
+
+        binding.amenitiesCard.visibility = View.VISIBLE
+        displayAmenity(binding.amenityChangingTable, business.hasChangingTable, R.string.amenity_changing_table)
+        displayAmenity(binding.amenityClean, if (business.isClean) "yes" else "no", R.string.amenity_clean)
+        displayAmenity(binding.amenityDiaperPail, if (business.hasDiaperPail) "yes" else "no", R.string.amenity_diaper_pail)
     }
 
-    private fun displayAmenity(
-        view: com.google.android.material.textview.MaterialTextView?,
-        isAvailable: Boolean
-    ) {
+    private fun displayAmenity(view: com.google.android.material.textview.MaterialTextView?, status: String?, baseTextRes: Int) {
         view?.let {
             it.visibility = View.VISIBLE
-            val iconRes = if (isAvailable) R.drawable.ic_check_24 else R.drawable.ic_close_24
+            val (iconRes, colorRes, suffix) = when (status) {
+                "yes" -> Triple(R.drawable.ic_check_24, R.color.green, "")
+                "out_of_service" -> Triple(R.drawable.ic_close_24, R.color.onContainerOrange, " (${context.getString(R.string.changing_table_out_of_service)})")
+                else -> Triple(R.drawable.ic_close_24, R.color.onContainerOrange, "")
+            }
+            it.text = context.getString(R.string.amenity_status_template, context.getString(baseTextRes), suffix)
             it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
-            val colorRes =
-                if (isAvailable) R.color.green else R.color.onContainerOrange
-            TextViewCompat.setCompoundDrawableTintList(
-                it,
-                ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
-            )
+            TextViewCompat.setCompoundDrawableTintList(it, ColorStateList.valueOf(ContextCompat.getColor(context, colorRes)))
         }
     }
 
