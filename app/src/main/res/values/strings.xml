@@ -27,4 +27,5 @@
     <string name="summary">Summary</string>
     <string name="all_back">Back</string>
     <string name="all_skip">Skip</string>
+    <string name="amenity_status_template">%1$s%2$s</string>
 </resources>
