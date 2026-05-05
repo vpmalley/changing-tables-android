@@ -2,6 +2,8 @@ package fr.vpm.changingtables.ui.map
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -94,22 +96,33 @@ class BusinessFormBottomSheet(
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        binding.addBusinessButton.isEnabled = false
-
         selectedType = null
         updateTypeSelectionUI()
+        validateForm()
+
+        binding.businessTitleNew.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateForm()
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         binding.typeCoffee.setOnClickListener {
             selectedType = "coffee"
             updateTypeSelectionUI()
+            validateForm()
         }
         binding.typeRestaurant.setOnClickListener {
             selectedType = "restaurant"
             updateTypeSelectionUI()
+            validateForm()
         }
         binding.typeActivity.setOnClickListener {
             selectedType = "activity"
             updateTypeSelectionUI()
+            validateForm()
         }
 
         val changingTableQuestion = Question().apply {
@@ -194,6 +207,12 @@ class BusinessFormBottomSheet(
         binding.typeCoffee.isSelected = selectedType == "coffee"
         binding.typeRestaurant.isSelected = selectedType == "restaurant"
         binding.typeActivity.isSelected = selectedType == "activity"
+    }
+
+    private fun validateForm() {
+        val isNameValid = !binding.businessTitleNew.editText?.text.isNullOrBlank()
+        val isTypeValid = selectedType != null
+        binding.addBusinessButton.isEnabled = isNameValid && isTypeValid
     }
 
     fun hide() {
