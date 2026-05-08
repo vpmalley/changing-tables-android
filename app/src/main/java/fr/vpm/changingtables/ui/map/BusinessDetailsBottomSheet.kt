@@ -83,33 +83,59 @@ class BusinessDetailsBottomSheet(
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         binding.businessTitle.text = business?.name
-        binding.businessDescription.text = business?.description ?: "Coffee shop"
-        binding.businessRating.visibility = View.GONE
+        binding.businessDescription.text = when (business?.type) {
+            "coffee" -> context.getString(R.string.coffee)
+            "restaurant" -> context.getString(R.string.restaurant)
+            "activity" -> context.getString(R.string.activity)
+            else -> business?.description ?: context.getString(R.string.business_type)
+        }
+        val categoryIcon = when (business?.type) {
+            "coffee" -> R.drawable.ic_coffee_24
+            "restaurant" -> R.drawable.ic_restaurant_24
+            "activity" -> R.drawable.ic_local_activity_24
+            else -> R.drawable.ic_coffee_24
+        }
+        binding.businessDescription.setCompoundDrawablesRelativeWithIntrinsicBounds(categoryIcon, 0, 0, 0)
+
+        binding.changingTableDescription.visibility = if (business?.changingTableLocation != null) View.VISIBLE else View.GONE
+        business?.changingTableLocation?.let {
+            binding.changingTableDescription.text = when (it) {
+                "unisex" -> context.getString(R.string.changing_table_unisex_toilet)
+                "male" -> context.getString(R.string.changing_table_male_toilet)
+                "female" -> context.getString(R.string.changing_table_female_toilet)
+                "accessible" -> context.getString(R.string.changing_table_accessible_toilet)
+                "other_room" -> context.getString(R.string.changing_table_other_place)
+                else -> it
+            }
+        }
+
+        binding.businessRating.visibility = if (business != null && business.rating >= 0) View.VISIBLE else View.GONE
         binding.businessRating.rating = business?.ratingAsFloat ?: 0f
         binding.businessRating.numStars = 5
 
         business?.let {
             binding.amenitiesCard.visibility = View.VISIBLE
-            displayAmenity(binding.amenityChangingTable, it.hasChangingTable != "no")
-            displayAmenity(binding.amenityClean, it.isClean)
-            displayAmenity(binding.amenityDiaperPail, it.hasDiaperPail)
+            displayAmenity(binding.amenityChangingTable, it.hasChangingTable)
+            displayAmenity(binding.amenityClean, if (it.isClean) "yes" else "no")
+            displayAmenity(binding.amenityDiaperPail, if (it.hasDiaperPail) "yes" else "no")
         }
     }
 
-    private fun displayAmenity(
-        view: com.google.android.material.textview.MaterialTextView?,
-        isAvailable: Boolean
-    ) {
+    private fun displayAmenity(view: com.google.android.material.textview.MaterialTextView?, status: String?) {
         view?.let {
             it.visibility = View.VISIBLE
-            val iconRes = if (isAvailable) R.drawable.ic_check_24 else R.drawable.ic_close_24
-            it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
-            val colorRes =
-                if (isAvailable) R.color.green else R.color.onContainerOrange
-            TextViewCompat.setCompoundDrawableTintList(
-                it,
-                ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
-            )
+            val (isAvail, isOos) = (status == "yes") to (status == "out_of_service")
+            it.setCompoundDrawablesRelativeWithIntrinsicBounds(if (isAvail) R.drawable.ic_check_24 else R.drawable.ic_close_24, 0, 0, 0)
+            val colorRes = when {
+                isAvail -> R.color.green
+                isOos -> R.color.primaryOrange
+                else -> R.color.onContainerOrange
+            }
+            TextViewCompat.setCompoundDrawableTintList(it, ColorStateList.valueOf(ContextCompat.getColor(context, colorRes)))
+            if (isOos) {
+                val oosLabel = context.getString(R.string.changing_table_out_of_service)
+                if (!it.text.contains(oosLabel)) it.text = "${it.text} ($oosLabel)"
+            }
         }
     }
 
