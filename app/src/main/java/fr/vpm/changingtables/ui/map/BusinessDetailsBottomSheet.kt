@@ -90,26 +90,41 @@ class BusinessDetailsBottomSheet(
 
         business?.let {
             binding.amenitiesCard.visibility = View.VISIBLE
-            displayAmenity(binding.amenityChangingTable, it.hasChangingTable != "no")
-            displayAmenity(binding.amenityClean, it.isClean)
-            displayAmenity(binding.amenityDiaperPail, it.hasDiaperPail)
+            displayAmenity(binding.amenityChangingTable, it.hasChangingTable, R.string.amenity_changing_table)
+            displayAmenity(binding.amenityClean, if (it.isClean) "yes" else "no", R.string.amenity_clean)
+            displayAmenity(binding.amenityDiaperPail, if (it.hasDiaperPail) "yes" else "no", R.string.amenity_diaper_pail)
         }
     }
 
     private fun displayAmenity(
         view: com.google.android.material.textview.MaterialTextView?,
-        isAvailable: Boolean
+        status: String?,
+        labelRes: Int
     ) {
         view?.let {
             it.visibility = View.VISIBLE
-            val iconRes = if (isAvailable) R.drawable.ic_check_24 else R.drawable.ic_close_24
+            val isOutOfService = status == "out_of_service"
+            val isAvailable = status != "no" && !isOutOfService
+
+            val iconRes = if (isAvailable || isOutOfService) R.drawable.ic_check_24 else R.drawable.ic_close_24
             it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
-            val colorRes =
-                if (isAvailable) R.color.green else R.color.onContainerOrange
+
+            val colorRes = when {
+                isAvailable -> R.color.green
+                isOutOfService -> R.color.primaryOrange
+                else -> R.color.onContainerOrange
+            }
             TextViewCompat.setCompoundDrawableTintList(
                 it,
                 ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
             )
+
+            val baseLabel = context.getString(labelRes)
+            it.text = if (isOutOfService) {
+                "$baseLabel - ${context.getString(R.string.changing_table_out_of_service)}"
+            } else {
+                baseLabel
+            }
         }
     }
 
