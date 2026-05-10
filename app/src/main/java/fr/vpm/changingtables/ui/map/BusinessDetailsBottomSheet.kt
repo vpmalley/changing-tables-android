@@ -83,33 +83,57 @@ class BusinessDetailsBottomSheet(
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         binding.businessTitle.text = business?.name
-        binding.businessDescription.text = business?.description ?: "Coffee shop"
-        binding.businessRating.visibility = View.GONE
+
+        val (iconRes, typeLabelRes) = when (business?.type) {
+            "coffee" -> R.drawable.ic_coffee_24 to R.string.coffee
+            "restaurant" -> R.drawable.ic_restaurant_24 to R.string.restaurant
+            "activity" -> R.drawable.ic_local_activity_24 to R.string.activity
+            else -> R.drawable.ic_coffee_24 to R.string.coffee
+        }
+        binding.businessDescription.setText(typeLabelRes)
+        binding.businessDescription.setCompoundDrawablesRelativeWithIntrinsicBounds(iconRes, 0, 0, 0)
+
+        val rating = business?.rating ?: -1
+        binding.businessRating.visibility = if (rating > 0) View.VISIBLE else View.GONE
         binding.businessRating.rating = business?.ratingAsFloat ?: 0f
         binding.businessRating.numStars = 5
 
         business?.let {
             binding.amenitiesCard.visibility = View.VISIBLE
-            displayAmenity(binding.amenityChangingTable, it.hasChangingTable != "no")
-            displayAmenity(binding.amenityClean, it.isClean)
-            displayAmenity(binding.amenityDiaperPail, it.hasDiaperPail)
+            displayAmenity(binding.amenityChangingTable, it.hasChangingTable, R.string.amenity_changing_table)
+            displayAmenity(binding.amenityClean, if (it.isClean) "yes" else "no", R.string.amenity_clean)
+            displayAmenity(binding.amenityDiaperPail, if (it.hasDiaperPail) "yes" else "no", R.string.amenity_diaper_pail)
         }
     }
 
     private fun displayAmenity(
         view: com.google.android.material.textview.MaterialTextView?,
-        isAvailable: Boolean
+        status: String?,
+        labelRes: Int
     ) {
         view?.let {
             it.visibility = View.VISIBLE
+            it.setText(labelRes)
+            val isOutOfService = status == "out_of_service"
+            val isAvailable = status == "yes" || (!isOutOfService && status != "no")
+
             val iconRes = if (isAvailable) R.drawable.ic_check_24 else R.drawable.ic_close_24
-            it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
-            val colorRes =
-                if (isAvailable) R.color.green else R.color.onContainerOrange
+            it.setCompoundDrawablesRelativeWithIntrinsicBounds(iconRes, 0, 0, 0)
+
+            val colorRes = when {
+                isOutOfService -> R.color.primaryOrange
+                isAvailable -> R.color.green
+                else -> R.color.onContainerOrange
+            }
             TextViewCompat.setCompoundDrawableTintList(
                 it,
                 ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
             )
+
+            if (isOutOfService) {
+                val outOfServiceLabel = context.getString(R.string.changing_table_out_of_service)
+                it.text = context.getString(R.string.amenity_out_of_service, it.text, outOfServiceLabel)
+            }
         }
     }
 
