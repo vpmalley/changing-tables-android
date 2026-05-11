@@ -83,10 +83,23 @@ class BusinessDetailsBottomSheet(
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         binding.businessTitle.text = business?.name
-        binding.businessDescription.text = business?.description ?: "Coffee shop"
-        binding.businessRating.visibility = View.GONE
-        binding.businessRating.rating = business?.ratingAsFloat ?: 0f
-        binding.businessRating.numStars = 5
+
+        val (typeText, typeIcon) = when (business?.type) {
+            "coffee" -> context.getString(R.string.coffee) to R.drawable.ic_coffee_24
+            "restaurant" -> context.getString(R.string.restaurant) to R.drawable.ic_restaurant_24
+            "activity" -> context.getString(R.string.activity) to R.drawable.ic_local_activity_24
+            else -> (business?.description ?: context.getString(R.string.coffee)) to R.drawable.ic_coffee_24
+        }
+        binding.businessDescription.text = typeText
+        binding.businessDescription.setCompoundDrawablesRelativeWithIntrinsicBounds(typeIcon, 0, 0, 0)
+
+        if (business != null && business.rating > 0) {
+            binding.businessRating.visibility = View.VISIBLE
+            binding.businessRating.rating = business.ratingAsFloat
+            binding.businessRating.contentDescription = context.getString(R.string.rating_description, business.ratingAsFloat)
+        } else {
+            binding.businessRating.visibility = View.GONE
+        }
 
         business?.let {
             binding.amenitiesCard.visibility = View.VISIBLE
@@ -103,7 +116,7 @@ class BusinessDetailsBottomSheet(
         view?.let {
             it.visibility = View.VISIBLE
             val iconRes = if (isAvailable) R.drawable.ic_check_24 else R.drawable.ic_close_24
-            it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
+            it.setCompoundDrawablesRelativeWithIntrinsicBounds(iconRes, 0, 0, 0)
             val colorRes =
                 if (isAvailable) R.color.green else R.color.onContainerOrange
             TextViewCompat.setCompoundDrawableTintList(
