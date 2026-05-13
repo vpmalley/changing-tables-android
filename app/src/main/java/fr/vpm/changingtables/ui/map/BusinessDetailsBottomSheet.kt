@@ -83,33 +83,64 @@ class BusinessDetailsBottomSheet(
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         binding.businessTitle.text = business?.name
-        binding.businessDescription.text = business?.description ?: "Coffee shop"
-        binding.businessRating.visibility = View.GONE
-        binding.businessRating.rating = business?.ratingAsFloat ?: 0f
-        binding.businessRating.numStars = 5
+
+        val typeIconRes = when (business?.type) {
+            "coffee" -> R.drawable.ic_coffee_24
+            "restaurant" -> R.drawable.ic_restaurant_24
+            "activity" -> R.drawable.ic_local_activity_24
+            else -> R.drawable.ic_coffee_24
+        }
+        val typeLabelRes = when (business?.type) {
+            "coffee" -> R.string.coffee
+            "restaurant" -> R.string.restaurant
+            "activity" -> R.string.activity
+            else -> R.string.business_type
+        }
+        binding.businessDescription.setText(typeLabelRes)
+        binding.businessDescription.setCompoundDrawablesRelativeWithIntrinsicBounds(typeIconRes, 0, 0, 0)
+
+        val rating = business?.ratingAsFloat ?: 0f
+        binding.businessRating.visibility = if (rating > 0) View.VISIBLE else View.GONE
+        binding.businessRating.rating = rating
+        binding.businessRating.contentDescription = context.getString(R.string.rating_description, rating)
 
         business?.let {
             binding.amenitiesCard.visibility = View.VISIBLE
-            displayAmenity(binding.amenityChangingTable, it.hasChangingTable != "no")
-            displayAmenity(binding.amenityClean, it.isClean)
-            displayAmenity(binding.amenityDiaperPail, it.hasDiaperPail)
+            displayAmenity(binding.amenityChangingTable, it.hasChangingTable, R.string.amenity_changing_table)
+            displayAmenity(binding.amenityClean, if (it.isClean) "yes" else "no", R.string.amenity_clean)
+            displayAmenity(binding.amenityDiaperPail, if (it.hasDiaperPail) "yes" else "no", R.string.amenity_diaper_pail)
         }
     }
 
     private fun displayAmenity(
         view: com.google.android.material.textview.MaterialTextView?,
-        isAvailable: Boolean
+        status: String?,
+        baseTextRes: Int
     ) {
         view?.let {
             it.visibility = View.VISIBLE
+            val isAvailable = status == "yes"
+            val isOutOfService = status == "out_of_service"
+
             val iconRes = if (isAvailable) R.drawable.ic_check_24 else R.drawable.ic_close_24
-            it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
-            val colorRes =
-                if (isAvailable) R.color.green else R.color.onContainerOrange
+            it.setCompoundDrawablesRelativeWithIntrinsicBounds(iconRes, 0, 0, 0)
+
+            val colorRes = when {
+                isAvailable -> R.color.green
+                isOutOfService -> R.color.primaryOrange
+                else -> R.color.onContainerOrange
+            }
             TextViewCompat.setCompoundDrawableTintList(
                 it,
                 ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
             )
+
+            val baseText = context.getString(baseTextRes)
+            it.text = if (isOutOfService) {
+                context.getString(R.string.amenity_out_of_service, baseText, context.getString(R.string.all_out_of_service))
+            } else {
+                baseText
+            }
         }
     }
 
