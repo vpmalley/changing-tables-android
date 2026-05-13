@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".ui.saved.SavedFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/saved_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingTop="?attr/actionBarSize"
         android:clipToPadding="false"
+        android:paddingTop="?attr/actionBarSize"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
