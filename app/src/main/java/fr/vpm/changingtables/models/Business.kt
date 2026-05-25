@@ -3,7 +3,9 @@ package fr.vpm.changingtables.models
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "businesses")
 class Business {
     @PrimaryKey(autoGenerate = true)
