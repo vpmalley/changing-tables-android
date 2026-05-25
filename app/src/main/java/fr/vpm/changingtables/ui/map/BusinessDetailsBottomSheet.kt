@@ -92,8 +92,8 @@ class BusinessDetailsBottomSheet(
         updateSaveButtonIcon(business?.savedOnDevice != null)
         binding.saveButton.setOnClickListener {
             business?.let {
+                updateSaveButtonIcon(business.savedOnDevice == null)
                 onSaveListener?.invoke(it)
-                updateSaveButtonIcon(true)
             }
         }
 
@@ -123,7 +123,8 @@ class BusinessDetailsBottomSheet(
     }
 
     private fun updateSaveButtonIcon(isSaved: Boolean) {
-        val iconRes = if (isSaved) R.drawable.ic_bookmark_24dp else R.drawable.ic_bookmark_border_24dp
+        val iconRes =
+            if (isSaved) R.drawable.ic_bookmark_24dp else R.drawable.ic_bookmark_border_24dp
         binding.saveButton.setIconResource(iconRes)
     }
 

@@ -49,8 +49,13 @@ class MapFragment : Fragment() {
         )
         businessDetailsBottomSheet.setupBottomSheet()
         businessDetailsBottomSheet.onSaveListener = { business ->
-            business.savedOnDevice = System.currentTimeMillis()
-            businessViewModel.addBusiness(business)
+            if (business.savedOnDevice != null) {
+                business.savedOnDevice = null
+                businessViewModel.addBusiness(business)
+            } else {
+                business.savedOnDevice = System.currentTimeMillis()
+                businessViewModel.addBusiness(business)
+            }
         }
 
         businessFormBottomSheet = BusinessFormBottomSheet(
