@@ -63,4 +63,9 @@ class Business {
     @get:Ignore
     val ratingAsFloat: Float
         get() = if (rating < 0) 0f else rating.toFloat()
+
+    override fun toString(): String {
+        return "Business(id=$id, name=$name, type=$type, description=$description, longitude=$longitude, latitude=$latitude, hasChangingTable=$hasChangingTable, changingTableLocation=$changingTableLocation, hasDiaperPail=$hasDiaperPail, isClean=$isClean, rating=$rating, area=$area, photoUrls=$photoUrls, savedOnDevice=$savedOnDevice, ratingAsFloat=$ratingAsFloat)"
+    }
+
 }
