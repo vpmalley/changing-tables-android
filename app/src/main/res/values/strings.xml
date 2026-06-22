@@ -27,4 +27,6 @@
     <string name="summary">Summary</string>
     <string name="all_back">Back</string>
     <string name="all_skip">Skip</string>
+    <string name="drag_handle">Drag handle</string>
+    <string name="amenity_out_of_service">%1$s (Out of service)</string>
 </resources>
