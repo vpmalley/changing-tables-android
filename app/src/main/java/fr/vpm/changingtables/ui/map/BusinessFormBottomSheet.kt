@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.doOnTextChanged
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
@@ -95,21 +96,29 @@ class BusinessFormBottomSheet(
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         binding.addBusinessButton.isEnabled = false
+        binding.businessTitleNew.editText?.setText("")
 
         selectedType = null
         updateTypeSelectionUI()
 
+        binding.businessTitleNew.editText?.doOnTextChanged { _, _, _, _ ->
+            validateForm()
+        }
+
         binding.typeCoffee.setOnClickListener {
             selectedType = "coffee"
             updateTypeSelectionUI()
+            validateForm()
         }
         binding.typeRestaurant.setOnClickListener {
             selectedType = "restaurant"
             updateTypeSelectionUI()
+            validateForm()
         }
         binding.typeActivity.setOnClickListener {
             selectedType = "activity"
             updateTypeSelectionUI()
+            validateForm()
         }
 
         val changingTableQuestion = Question().apply {
@@ -117,7 +126,7 @@ class BusinessFormBottomSheet(
             options = listOf(
                 Option("yes", R.string.all_yes),
                 Option("no", R.string.all_no),
-                Option("out_of_service", R.string.changing_table_out_of_service)
+                Option("out_of_service", R.string.all_out_of_service)
             )
             singleChoice = true
             chipStyleRes = com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
@@ -188,6 +197,11 @@ class BusinessFormBottomSheet(
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             mapManager.clearNewBusinessMarker()
         }
+    }
+
+    private fun validateForm() {
+        val name = binding.businessTitleNew.editText?.text?.toString()
+        binding.addBusinessButton.isEnabled = !name.isNullOrBlank() && selectedType != null
     }
 
     private fun updateTypeSelectionUI() {
