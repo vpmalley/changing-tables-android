@@ -13,6 +13,7 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import fr.vpm.changingtables.R
 import fr.vpm.changingtables.databinding.BusinessDetailsBottomSheetBinding
+import fr.vpm.changingtables.models.AmenityDisplay
 import fr.vpm.changingtables.models.Business
 
 class BusinessDetailsBottomSheet(
@@ -99,9 +100,37 @@ class BusinessDetailsBottomSheet(
 
         business?.let {
             binding.amenitiesCard.visibility = View.VISIBLE
-            displayAmenity(binding.amenityChangingTable, it.hasChangingTable != "no")
-            displayAmenity(binding.amenityClean, it.isClean)
-            displayAmenity(binding.amenityDiaperPail, it.hasDiaperPail)
+//            displayAmenity(binding.amenityChangingTable, it.hasChangingTable != "no")
+//            displayAmenity(binding.amenityClean, it.isClean)
+//            displayAmenity(binding.amenityDiaperPail, it.hasDiaperPail)
+            binding.amenities.setBusinessType(it.type)
+            binding.amenities.setAmenities(
+                listOf(
+                    AmenityDisplay.fromAmenity(
+                        R.string.amenity_changing_table,
+                        it.hasChangingTable != "no",
+                        true
+                    ),
+                    AmenityDisplay.fromAmenity(
+                        if (it.isClean) {
+                            R.string.amenity_clean
+                        } else {
+                            R.string.amenity_dirty
+                        },
+                        it.isClean,
+                        true
+                    ),
+                    AmenityDisplay.fromAmenity(
+                        if (it.hasDiaperPail) {
+                            R.string.amenity_diaper_pail
+                        } else {
+                            R.string.amenity_diaper_pail_missing
+                        },
+                        it.hasDiaperPail,
+                        false
+                    )
+                )
+            )
         }
     }
 

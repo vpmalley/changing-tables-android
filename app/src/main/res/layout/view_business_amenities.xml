@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/businessTypeIcon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        app:layout_constraintWidth_percent="0.33"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/amenitiesChipGroup"
+        app:layout_constraintBottom_toBottomOf="@+id/amenitiesChipGroup"
+        app:layout_constraintDimensionRatio="1:1"
+        tools:src="@drawable/ic_type_cafe" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/amenitiesChipGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_thin"
+        app:chipSpacing="@dimen/margin_thin"
+        app:layout_constraintWidth_percent="0.67"
+        app:layout_constraintStart_toEndOf="@id/businessTypeIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,7 +11,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="green">#05C405</color>
+    <color name="green">#7CBE99</color>
 
     <color name="primaryBlue">#4E9DB8</color>
     <color name="lightBlue">#B4D5DD</color>
@@ -25,4 +25,5 @@
     <color name="containerOrange">#FFC18E</color>
     <color name="darkerContainerOrange">#F0B27F</color>
     <color name="onContainerOrange">#4C2700</color>
+    <color name="containerLightOrange">#F7EFE2</color>
 </resources>

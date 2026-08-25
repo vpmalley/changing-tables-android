@@ -27,4 +27,6 @@
     <string name="summary">Summary</string>
     <string name="all_back">Back</string>
     <string name="all_skip">Skip</string>
+    <string name="amenity_dirty">Dirty</string>
+    <string name="amenity_diaper_pail_missing">No Diaper pail</string>
 </resources>

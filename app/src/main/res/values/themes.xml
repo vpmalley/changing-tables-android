@@ -16,7 +16,7 @@
         <item name="colorSecondaryContainer">@color/primaryBlue
         </item> <!-- bottom navigation view Indicator Color -->
 
-        <item name="colorSurface">@color/containerOrange</item>
+        <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">@color/onContainerOrange</item>
 
         <!-- Status bar color. -->
