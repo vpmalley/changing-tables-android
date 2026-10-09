@@ -99,6 +99,9 @@ class BusinessFormBottomSheet(
         selectedType = null
         updateTypeSelectionUI()
 
+        // Clear the business name field
+        binding.businessTitleNew.editText?.text?.clear()
+
         binding.typeCoffee.setOnClickListener {
             selectedType = "coffee"
             updateTypeSelectionUI()
