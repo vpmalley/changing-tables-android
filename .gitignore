@@ -32,3 +32,7 @@ google-services.json
 # Android Profiling
 *.hprof
 /gradle/gradle-daemon-jvm.properties
+
+# AI agents
+.claude
+.vibe
