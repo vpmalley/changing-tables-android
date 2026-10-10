@@ -16,13 +16,13 @@ CREATE TABLE IF NOT EXISTS businesses (
 );
 
 INSERT INTO businesses (name, type, description, longitude, latitude, hasChangingTable, changingTableLocation, hasDiaperPail, isClean, rating, area, photoUrls, savedOnDevice)
-VALUES ('The Green Beanery', 'cafe', NULL, -123.1727, 49.2595, 'yes', 'accessible', 1, 1, 4, 'Victoria', '[]', NULL);
+VALUES ('The Green Beanery', 'coffee', NULL, -123.1727, 49.2595, 'yes', 'accessible', 1, 1, 4, 'Victoria', '[]', NULL);
 
 INSERT INTO businesses (name, type, description, longitude, latitude, hasChangingTable, changingTableLocation, hasDiaperPail, isClean, rating, area, photoUrls, savedOnDevice)
 VALUES ('Loaf & Ale', 'restaurant', NULL, -123.1735, 49.2588, 'yes', 'unisex', 1, 1, 5, 'Victoria', '[]', NULL);
 
 INSERT INTO businesses (name, type, description, longitude, latitude, hasChangingTable, changingTableLocation, hasDiaperPail, isClean, rating, area, photoUrls, savedOnDevice)
-VALUES ('Brew & Bloom', 'cafe', NULL, -123.1719, 49.2602, 'yes', 'female', 0, 1, 3, 'Victoria', '[]', NULL);
+VALUES ('Brew & Bloom', 'coffee', NULL, -123.1719, 49.2602, 'yes', 'female', 0, 1, 3, 'Victoria', '[]', NULL);
 
 
 -- Generate a .db file from this file:

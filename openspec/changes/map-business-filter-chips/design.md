@@ -6,7 +6,8 @@
 - `MapManager` uses one `PointAnnotationManager` for both business markers and the new-business pin. `showBusinesses` calls `deleteAll()`, which also removes the pin while the user is placing it. This already happens whenever Room emits again (for example after toggling save).
 - `MapViewModel` is activity-scoped (`activityViewModels`) and only holds an unused `text` stub.
 - `Business.type` is a raw string (`coffee` | `restaurant` | `activity`). "Saved" means `savedOnDevice != null`.
-- The app bar is hidden on the map destination and the app is not edge-to-edge, so the map starts below the status bar and the top of the map is free.
+- The app bar is hidden on the map destination. With `targetSdk` 36, Android 15+ enforces edge-to-edge, so the map draws behind the status bar: `mapTopBar` adds the status bar inset to its top padding (and the compass offset follows, as it uses the bar's bottom).
+- Type values were inconsistent: the add form writes `coffee`, while the prepopulated data used `cafe`. The data is normalised to `coffee` (see Decision 7), so `MapFilter` matches type strings exactly.
 - The project uses LiveData (no Flow/coroutines-in-UI pattern), Material 3 and View Binding.
 
 ## Goals / Non-Goals
@@ -51,7 +52,7 @@ Because `MapViewModel` is activity-scoped, the in-memory store survives tab swit
 *Alternative:* `SavedStateHandle`. Rejected: it would also restore the filter after the system kills the process, which is more than "session-only", and it is harder to swap for a persisted store.
 
 ### 3. Combining in `MapViewModel` with `MediatorLiveData`
-`MapViewModel` exposes `filter: LiveData<MapFilter>`, `toggleType(type)`, `setSavedOnly(Boolean)` and `visibleBusinesses(source: LiveData<List<Business>>)`. That last one returns a `MediatorLiveData` that recomputes `source.filter(filter::matches)` whenever either input emits. The business source stays in `BusinessViewModel`; `MapFragment` connects them. This avoids `MapViewModel` needing the `Application` to build the repository.
+`MapViewModel` exposes `filter: LiveData<MapFilter>`, `setTypeSelected(type, selected)` (idempotent, so restoring chip state from the filter cannot flip it back), `setSavedOnly(Boolean)` and `visibleBusinesses(source: LiveData<List<Business>>)`. That last one returns a `MediatorLiveData` that recomputes `source.filter(filter::matches)` whenever either input emits. The business source stays in `BusinessViewModel`; `MapFragment` connects them. This avoids `MapViewModel` needing the `Application` to build the repository.
 *Alternative:* do the filtering in `BusinessViewModel`. Rejected: it is shared with the Saved screen, and map filter state does not belong there.
 
 ### 4. Two point annotation managers
@@ -66,6 +67,10 @@ The chip-to-type mapping is in `MapFragment` (chip id → type constant). Chip c
 
 ### 6. Removal
 Delete `fabFilter`, `filterOptions` and the three mini FABs from the layout, plus `isFilterExpanded`, `setupFilterFab`, `toggleFilter`, `expandFilter` and `collapseFilter` from `MapFragment`. Remove the `filter` string resource if it is no longer referenced. Leave the drawable `ic_filter_list_24` in place (harmless; it can be cleaned up separately).
+
+### 7. Normalise `cafe` to `coffee` in bundled data
+`assets/databases/prepopulated.sql`, `prepopulated.db` and the commented-out seed in `AppDatabase` used `cafe`. They are updated to `coffee` (only the `type` column is changed in the `.db`, so its other contents are kept). Neither file is loaded at runtime (no `createFromAsset`, seed callback commented out), so no Room migration is needed for existing installs.
+*Alternative:* make the Coffee chip match both values. Rejected in favour of a single canonical value. The `"cafe"` aliases in `SavedBusinessesAdapter` and `BusinessAmenitiesView` stay as harmless fallbacks.
 
 ## Risks / Trade-offs
 

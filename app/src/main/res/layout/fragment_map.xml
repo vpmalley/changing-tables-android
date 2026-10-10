@@ -26,6 +26,76 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Top area: will also hold the search bar, above the filter chips -->
+    <LinearLayout
+        android:id="@+id/mapTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/margin_thin"
+        android:paddingBottom="@dimen/margin_thin">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/margin_thin"
+            android:paddingEnd="@dimen/margin_thin"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/filterChipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:selectionRequired="false"
+                app:singleLine="true"
+                app:singleSelection="false">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCoffee"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/coffee"
+                    app:chipIcon="@drawable/ic_coffee_24"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant"
+                    app:chipIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipRestaurant"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/restaurant"
+                    app:chipIcon="@drawable/ic_restaurant_24"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant"
+                    app:chipIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipActivity"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity"
+                    app:chipIcon="@drawable/ic_local_activity_24"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant"
+                    app:chipIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSaved"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_saved"
+                    app:chipIcon="@drawable/ic_bookmark_24dp"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant"
+                    app:chipIconVisible="true" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+    </LinearLayout>
+
     <include
         android:id="@+id/businessDetailsBottomSheet"
         layout="@layout/business_details_bottom_sheet"
@@ -36,55 +106,4 @@
         layout="@layout/business_form_bottom_sheet"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/filterOptions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="24dp"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabActivity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="96dp"
-            android:contentDescription="@string/activity"
-            app:fabSize="mini"
-            app:srcCompat="@drawable/ic_local_activity_24" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabRestaurant"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="96dp"
-            android:contentDescription="@string/restaurant"
-            app:fabSize="mini"
-            app:srcCompat="@drawable/ic_restaurant_24" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabCoffee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="96dp"
-            android:contentDescription="@string/coffee"
-            app:fabSize="mini"
-            app:srcCompat="@drawable/ic_coffee_24" />
-
-    </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabFilter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="120dp"
-        android:contentDescription="@string/filter"
-        app:srcCompat="@drawable/ic_filter_list_24" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

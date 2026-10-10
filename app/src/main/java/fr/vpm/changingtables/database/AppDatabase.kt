@@ -34,7 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
 //                                INSTANCE?.businessDao()?.insertSync(
 //                                    Business().apply {
 //                                        name = "The Green Beanery"
-//                                        type = "cafe"
+//                                        type = "coffee"
 //                                        longitude = -123.1727
 //                                        latitude = 49.2595
 //                                        hasChangingTable = "yes"

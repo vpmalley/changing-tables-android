@@ -22,7 +22,10 @@ class MapManager {
 
     val gson = Gson().newBuilder().create()
 
-    private var pointAnnotationManager: PointAnnotationManager? = null
+    private var businessAnnotationManager: PointAnnotationManager? = null
+
+    // Separate manager so that re-rendering business markers never removes the new business pin
+    private var newBusinessAnnotationManager: PointAnnotationManager? = null
 
     private var newBusinessAnnotation: PointAnnotation? = null
 
@@ -39,8 +42,10 @@ class MapManager {
         annotationApi: AnnotationPlugin,
         showBusiness: (Business) -> Unit
     ) {
-        pointAnnotationManager = annotationApi.createPointAnnotationManager()
-        pointAnnotationManager?.addClickListener { annotation ->
+        businessAnnotationManager = annotationApi.createPointAnnotationManager()
+        // Created second so that the new business pin is drawn above business markers
+        newBusinessAnnotationManager = annotationApi.createPointAnnotationManager()
+        businessAnnotationManager?.addClickListener { annotation ->
             val annotationData = annotation.getData()
             if (annotationData != null) {
                 val business = gson.fromJson(annotationData, Business::class.java)
@@ -51,20 +56,20 @@ class MapManager {
     }
 
     fun onDestroyView() {
-        pointAnnotationManager = null
+        businessAnnotationManager = null
+        newBusinessAnnotationManager = null
         newBusinessAnnotation = null
         businessMarkerBitmap = null
     }
 
     fun showBusinesses(context: Context, businesses: List<Business>?) {
         loadMarkers(context)
-        pointAnnotationManager?.deleteAll()
-        newBusinessAnnotation = null
+        businessAnnotationManager?.deleteAll()
         if (businesses != null) {
             val allBusinessAnnotationOptions = businesses.map { business ->
                 BusinessToPointAnnotation().toPointAnnotation(business, businessMarkerBitmap)
             }
-            pointAnnotationManager?.create(allBusinessAnnotationOptions)
+            businessAnnotationManager?.create(allBusinessAnnotationOptions)
         }
     }
 
@@ -75,12 +80,12 @@ class MapManager {
             .withIconSize(1.0)
             .withSymbolSortKey(5.0)
         businessMarkerBitmap?.let { pointAnnotationOptions.withIconImage(it) }
-        newBusinessAnnotation = pointAnnotationManager?.create(pointAnnotationOptions)
+        newBusinessAnnotation = newBusinessAnnotationManager?.create(pointAnnotationOptions)
     }
 
     fun clearNewBusinessMarker() {
         newBusinessAnnotation?.let {
-            pointAnnotationManager?.delete(it)
+            newBusinessAnnotationManager?.delete(it)
         }
         newBusinessAnnotation = null
     }

@@ -29,6 +29,7 @@ The map screen has a filter FAB that expands into three mini FABs (activity, res
 - **View model**: `ui/map/MapViewModel.kt`: replace the unused `text` stub with filter state and the filtered business list.
 - **Map rendering**: `ui/map/MapManager.kt`: split into two point annotation managers, one for business markers and one for the new-business pin.
 - **New code**: a filter value type with the matching logic, and a filter store interface with an in-memory implementation.
-- **Resources**: reuse the existing type icons and `ic_bookmark_24dp`, and the existing `coffee` / `restaurant` / `activity` / `title_saved` strings. The `filter` string may become unused.
+- **Resources**: reuse the existing type icons and `ic_bookmark_24dp`, and the existing `coffee` / `restaurant` / `activity` / `title_saved` strings. The `filter` string becomes unused and is removed.
+- **Data**: normalise the `cafe` business type to `coffee` in the bundled prepopulated data (not loaded at runtime, so no migration).
 - **Tests**: unit tests for the filter matching logic (`app/src/test`).
 - **Dependencies**: no new runtime dependencies; one test-only dependency (`androidx.arch.core:core-testing`) for LiveData unit tests.
