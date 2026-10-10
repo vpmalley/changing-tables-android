@@ -92,12 +92,15 @@ class MapFragment : Fragment() {
             binding.chipRestaurant to MapFilter.TYPE_RESTAURANT,
             binding.chipActivity to MapFilter.TYPE_ACTIVITY,
         )
+        // The checkmark is drawn in the chip icon's slot, so the icon is hidden while checked
         typeChips.forEach { (chip, type) ->
             chip.setOnCheckedChangeListener { _, isChecked ->
+                chip.isChipIconVisible = !isChecked
                 mapViewModel.setTypeSelected(type, isChecked)
             }
         }
         binding.chipSaved.setOnCheckedChangeListener { _, isChecked ->
+            binding.chipSaved.isChipIconVisible = !isChecked
             mapViewModel.setSavedOnly(isChecked)
         }
 

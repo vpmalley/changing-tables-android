@@ -18,14 +18,14 @@
 
 ## 4. Chip UI and removal of the FAB
 
-- [x] 4.1 In `fragment_map.xml`, remove `fabFilter`, `filterOptions` and the three mini FABs, and add `mapTopBar` (vertical container at the top, placed before the bottom-sheet includes) containing a `HorizontalScrollView` with a single-line `ChipGroup` and four `Widget.Material3.Chip.Filter` chips (Coffee `ic_coffee_24`, Restaurant `ic_restaurant_24`, Activity `ic_local_activity_24`, Saved `ic_bookmark_24dp`, text from the existing strings); pad `mapTopBar` by the status bar inset (edge-to-edge on Android 15+); verify on a device that the chip row shows below the status bar, icons visible, and no FAB
+- [x] 4.1 In `fragment_map.xml`, remove `fabFilter`, `filterOptions` and the three mini FABs, and add `mapTopBar` (vertical container at the top, placed before the bottom-sheet includes) containing a `HorizontalScrollView` with a single-line `ChipGroup` and four `Widget.Material3.Chip.Filter.Elevated` chips with the checkmark shown when selected (Coffee `ic_coffee_24`, Restaurant `ic_restaurant_24`, Activity `ic_local_activity_24`, Saved `ic_bookmark_24dp`, text from the existing strings); pad `mapTopBar` by the status bar inset (edge-to-edge on Android 15+); verify on a device that the chip row shows below the status bar, icons visible, and no FAB
 - [x] 4.2 In `MapFragment`, delete `isFilterExpanded` and the FAB setup/toggle/expand/collapse functions; remove the `filter` string if it is no longer referenced; verify the build succeeds with no unused references (`grep -rn "fabFilter\|filterOptions\|R.string.filter" app/src`)
 - [x] 4.3 Bind the chips to `MapViewModel` (type chip → `setTypeSelected`, Saved → `setSavedOnly`), and observe `filter` to set each chip's checked state only when it differs; verify on a device that chips toggle and their state is restored after switching to the Saved tab and back
 - [x] 4.4 Replace the observer of `businessViewModel.businesses` with one on `mapViewModel.visibleBusinesses(businessViewModel.businesses)` that feeds `mapManager.showBusinesses`; verify on a device each scenario in the spec's "Type chips combine with OR" and "Saved chip combines with AND" requirements
 
 ## 5. Compass offset
 
-- [ ] 5.1 After `mapTopBar` is laid out (and when its size changes), set `binding.mapView.compass.marginTop` to the bar's bottom plus 8dp; verify on a device that the compass appears fully below the chips when the map is rotated
+- [x] 5.1 After `mapTopBar` is laid out (and when its size changes), set `binding.mapView.compass.marginTop` to the bar's bottom plus 8dp; verify on a device that the compass appears fully below the chips when the map is rotated
 
 ## 6. Integration check
 

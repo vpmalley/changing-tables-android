@@ -60,7 +60,8 @@
                     android:text="@string/coffee"
                     app:chipIcon="@drawable/ic_coffee_24"
                     app:chipIconTint="?attr/colorOnSurfaceVariant"
-                    app:chipIconVisible="true" />
+                    app:chipIconVisible="true"
+                    app:checkedIconVisible="true" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipRestaurant"
@@ -70,7 +71,8 @@
                     android:text="@string/restaurant"
                     app:chipIcon="@drawable/ic_restaurant_24"
                     app:chipIconTint="?attr/colorOnSurfaceVariant"
-                    app:chipIconVisible="true" />
+                    app:chipIconVisible="true"
+                    app:checkedIconVisible="true" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipActivity"
@@ -80,7 +82,8 @@
                     android:text="@string/activity"
                     app:chipIcon="@drawable/ic_local_activity_24"
                     app:chipIconTint="?attr/colorOnSurfaceVariant"
-                    app:chipIconVisible="true" />
+                    app:chipIconVisible="true"
+                    app:checkedIconVisible="true" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipSaved"
@@ -90,7 +93,8 @@
                     android:text="@string/title_saved"
                     app:chipIcon="@drawable/ic_bookmark_24dp"
                     app:chipIconTint="?attr/colorOnSurfaceVariant"
-                    app:chipIconVisible="true" />
+                    app:chipIconVisible="true"
+                    app:checkedIconVisible="true" />
 
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
