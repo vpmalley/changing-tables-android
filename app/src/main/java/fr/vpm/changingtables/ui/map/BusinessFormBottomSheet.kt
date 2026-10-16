@@ -67,6 +67,7 @@ class BusinessFormBottomSheet(
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     mapManager.clearNewBusinessMarker()
+                    mapManager.clearDraggableMarker()
                 }
             }
 

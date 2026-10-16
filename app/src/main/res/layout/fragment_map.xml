@@ -110,4 +110,13 @@
         layout="@layout/business_form_bottom_sheet"
         android:visibility="gone" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddBusiness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/add_business"
+        android:src="@drawable/ic_add_24" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

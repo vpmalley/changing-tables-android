@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.compass.compass
 import fr.vpm.changingtables.R
@@ -67,12 +68,35 @@ class MapFragment : Fragment() {
             mapManager
         )
         businessFormBottomSheet.setupBottomSheet()
+        
+        // Hide FAB when business form bottom sheet is shown
+        val formBottomSheetBehavior = BottomSheetBehavior.from(binding.businessFormBottomSheet.businessFormLayout)
+        formBottomSheetBehavior.addBottomSheetCallback(object : com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED,
+                    BottomSheetBehavior.STATE_COLLAPSED,
+                    BottomSheetBehavior.STATE_DRAGGING,
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                        binding.fabAddBusiness.hide()
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.fabAddBusiness.show()
+                    }
+                    else -> {}
+                }
+            }
+            
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
 
         setupFilterChips()
         setupTopBarBelowStatusBar()
         setupCompassBelowTopBar()
+        setupFab()
         mapManager.setupPointAnnotationManager(
-            binding.mapView.annotations
+            binding.mapView.annotations,
+            binding.mapView
         ) { business ->
             businessFormBottomSheet.hide()
             businessDetailsBottomSheet.showBusiness(business)
@@ -138,6 +162,27 @@ class MapFragment : Fragment() {
         }
     }
 
+    private fun setupFab() {
+        binding.fabAddBusiness.setOnClickListener {
+            // Clear any existing new business markers
+            mapManager.clearNewBusinessMarker()
+            
+            // Create a draggable marker at the map center
+            mapManager.createDraggableMarker(
+                requireContext(),
+                binding.mapView,
+                onDrop = { point ->
+                    // When the user drops the marker, show the business form
+                    businessDetailsBottomSheet.hide()
+                    businessFormBottomSheet.showNewBusiness(point)
+                },
+                onCancel = {
+                    // When the user cancels (drags off-screen), just clean up
+                    // The marker is already cleared by createDraggableMarker
+                }
+            )
+        }
+    }
 
     private fun onBusinesses(businesses: List<Business>?) {
         Log.d("businessViewModel", "all businesses to display are : $businesses")
