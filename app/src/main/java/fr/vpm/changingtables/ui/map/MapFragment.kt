@@ -11,6 +11,7 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.compass.compass
 import fr.vpm.changingtables.R
@@ -181,6 +182,9 @@ class MapFragment : Fragment() {
                     // The marker is already cleared by createDraggableMarker
                 }
             )
+            
+            // Show a snackbar to instruct the user to drag and drop the marker
+            Snackbar.make(binding.fabAddBusiness, "Drag and drop the marker to add a business at that location", Snackbar.LENGTH_LONG).show()
         }
     }
 
