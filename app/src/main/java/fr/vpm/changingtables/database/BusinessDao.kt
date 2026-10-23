@@ -5,12 +5,16 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import fr.vpm.changingtables.models.Business
 
 @Dao
 interface BusinessDao {
     @Query("SELECT * FROM businesses")
     fun getAll(): LiveData<List<Business>>
+
+    @Query("SELECT * FROM businesses")
+    suspend fun getAllSync(): List<Business>
 
     @Query("SELECT * FROM businesses WHERE latitude = :lat AND longitude = :lon")
     fun findByLocation(lat: Double, lon: Double): LiveData<List<Business>>
@@ -32,4 +36,10 @@ interface BusinessDao {
 
     @Query("DELETE FROM businesses")
     suspend fun deleteAll()
+
+    @Transaction
+    suspend fun replaceAll(businesses: List<Business>) {
+        deleteAll()
+        insertAll(businesses)
+    }
 }

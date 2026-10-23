@@ -3,16 +3,21 @@ package fr.vpm.changingtables
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import fr.vpm.changingtables.database.AppDatabase
 import fr.vpm.changingtables.databinding.ActivityMainBinding
+import fr.vpm.changingtables.repositories.BusinessRepository
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var repository: BusinessRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +49,23 @@ class MainActivity : AppCompatActivity() {
             } else {
                 binding.appBar.visibility = android.view.View.VISIBLE
             }
+        }
+
+        val dao = AppDatabase.getDatabase(this).businessDao()
+        repository = BusinessRepository(dao)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        lifecycleScope.launch {
+            repository.importFromJson(applicationContext)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        lifecycleScope.launch {
+            repository.exportToJson(applicationContext)
         }
     }
 }
