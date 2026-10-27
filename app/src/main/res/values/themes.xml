@@ -1,29 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.ChangingTables" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primaryBlue</item>
-        <item name="colorPrimaryVariant">@color/lightBlue</item>
-        <item name="colorOnPrimary">@color/onPrimaryBlue</item>
 
-        <item name="android:colorBackground">@color/lightBlue</item>
-        <item name="colorOnBackground">@color/primaryBlue</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/primaryOrange</item>
-        <item name="colorSecondaryVariant">@color/lightOrange</item>
-        <item name="colorOnSecondary">@color/lightGrey</item>
+    <!-- ===== Main theme ===== -->
+    <style name="Theme.ChangingTables" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorPrimaryContainer">@color/colorPrimaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/colorOnPrimaryContainer</item>
 
-        <item name="colorSecondaryContainer">@color/primaryBlue
-        </item> <!-- bottom navigation view Indicator Color -->
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="colorSecondaryContainer">@color/colorSecondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/colorOnSecondaryContainer</item>
 
-        <item name="colorSurface">@color/white</item>
-        <item name="colorOnSurface">@color/onContainerOrange</item>
+        <item name="colorTertiary">@color/colorTertiary</item>
+        <item name="colorOnTertiary">@color/colorOnTertiary</item>
+        <item name="colorTertiaryContainer">@color/colorTertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/colorOnTertiaryContainer</item>
 
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-        <!-- Inside a Material Theme -->
-        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Material3.SmallComponent
-        </item>
+        <item name="colorError">@color/colorError</item>
+        <item name="colorOnError">@color/colorOnError</item>
+        <item name="colorErrorContainer">@color/colorErrorContainer</item>
+        <item name="colorOnErrorContainer">@color/colorOnErrorContainer</item>
+
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="colorOnBackground">@color/colorOnBackground</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="colorSurfaceVariant">@color/colorSurfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/colorOnSurfaceVariant</item>
+        <item name="colorOutline">@color/colorOutline</item>
+
+        <!-- System bars -->
+        <item name="android:statusBarColor">@color/colorBackground</item>
+        <item name="android:navigationBarColor">@color/bottomNavBackground</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+
+        <!-- Bottom navigation styling -->
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
     </style>
+
+    <!-- ===== Bottom navigation view ===== -->
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/bottomNavBackground</item>
+        <item name="backgroundTint">@color/bottomNavBackground</item>
+        <item name="itemIconTint">@color/bottomNavContent</item>
+        <item name="itemTextColor">@color/bottomNavContent</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.App.BottomNavigationView.ActiveIndicator</item>
+        <item name="itemRippleColor">@color/palette_lavender_20</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigationView.ActiveIndicator"
+        parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/bottomNavIndicator</item>
+    </style>
+
 </resources>

@@ -1,24 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_20">#FFF6EFFF</color>
-    <color name="purple_50">#FFEFE5FD</color>
-    <color name="purple_100">#FFD5BFF9</color>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#D06200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="purple_900">#FF25007C</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="green">#7CBE99</color>
 
-    <color name="primaryBlue">#4E9DB8</color>
-    <color name="lightBlue">#B4D5DD</color>
-    <color name="lightGrey">#F0EBE5</color>
-    <color name="primaryOrange">#F4680A</color>
-    <color name="lightOrange">#F99D45</color>
+    <!-- ===== Palette (from your swatches) ===== -->
+    <color name="palette_green">#7CBE99</color>
+    <color name="palette_terracotta">#AE684B</color>
+    <color name="palette_gray_lilac">#A9A3B2</color>
+    <color name="palette_cream">#F7EFE2</color>
+    <color name="palette_lavender_20">#33B39BD1</color> <!-- B39BD1 at 20% opacity -->
+    <color name="palette_orange">#FFB35A</color>
+    <color name="palette_gold">#A57527</color>
+    <color name="palette_blue">#194EED</color>
+    <color name="palette_red">#C44747</color>
+    <color name="palette_pink">#EF3CC5</color>
 
+    <!-- Helpers -->
+    <color name="ink">#2B2530</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- ===== Semantic colors ===== -->
+    <color name="colorPrimary">@color/palette_terracotta</color>
+    <color name="colorOnPrimary">@color/white</color>
+    <color name="colorPrimaryContainer">#F3D9CD</color>
+    <color name="colorOnPrimaryContainer">#3A1D10</color>
+
+    <color name="colorSecondary">@color/palette_green</color>
+    <color name="colorOnSecondary">@color/ink</color>
+    <color name="colorSecondaryContainer">#D3EBDD</color>
+    <color name="colorOnSecondaryContainer">#0F2E1C</color>
+
+    <color name="colorTertiary">@color/palette_orange</color>
+    <color name="colorOnTertiary">@color/ink</color>
+    <color name="colorTertiaryContainer">#FFE3C2</color>
+    <color name="colorOnTertiaryContainer">#3D2400</color>
+
+    <color name="colorError">@color/palette_red</color>
+    <color name="colorOnError">@color/white</color>
+    <color name="colorErrorContainer">#F6D5D5</color>
+    <color name="colorOnErrorContainer">#410909</color>
+
+    <color name="colorBackground">@color/palette_cream</color>
+    <color name="colorOnBackground">@color/ink</color>
+    <color name="colorSurface">@color/palette_cream</color>
+    <color name="colorOnSurface">@color/ink</color>
+    <color name="colorSurfaceVariant">#EAE3EE</color>
+    <color name="colorOnSurfaceVariant">#4A4553</color>
+    <color name="colorOutline">@color/palette_gray_lilac</color>
+
+    <!-- Extra accents -->
+    <color name="colorAccentGold">@color/palette_gold</color>
+    <color name="colorAccentBlue">@color/palette_blue</color>
+    <color name="colorAccentPink">@color/palette_pink</color>
+
+    <!-- Bottom navigation -->
+    <color name="bottomNavBackground">@color/palette_cream</color>
+    <color name="bottomNavContent">@color/palette_terracotta</color>
+    <color name="bottomNavIndicator">@color/palette_lavender_20</color>
+
+
+    <!-- Existing colors -->
     <color name="onPrimaryBlue">#00313E</color>
     <color name="containerBlue">#84D1EE</color>
     <color name="onContainerBlue">#003543</color>
@@ -26,4 +66,7 @@
     <color name="darkerContainerOrange">#F0B27F</color>
     <color name="onContainerOrange">#4C2700</color>
     <color name="containerLightOrange">#F7EFE2</color>
+
+    <color name="teal_700">#FF018786</color>
+    <color name="green">#7CBE99</color>
 </resources>
