@@ -2,8 +2,11 @@ package fr.vpm.changingtables.ui.map
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Handler
+import android.os.Looper
 import com.google.gson.Gson
 import com.mapbox.geojson.Point
+import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
 import com.mapbox.maps.plugin.annotation.AnnotationPlugin
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotation
@@ -12,6 +15,8 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
+import com.mapbox.maps.plugin.gestures.gestures
+import com.mapbox.maps.plugin.animation.easeTo
 import fr.vpm.changingtables.BusinessToPointAnnotation
 import fr.vpm.changingtables.R
 import fr.vpm.changingtables.models.Business
@@ -35,7 +40,20 @@ class MapManager {
 
     private var draggableBusinessAnnotation: PointAnnotation? = null
 
+    // Separate manager for the user location puck (sortKey between business markers and draggable marker)
+    private var locationPuckAnnotationManager: PointAnnotationManager? = null
+
+    private var locationPuckAnnotation: PointAnnotation? = null
+
+    internal var locationPuckBitmap: Bitmap? = null
+
     internal var businessMarkerBitmap: Bitmap? = null
+
+    // User interaction tracking
+    private var isUserInteracting = false
+    private val interactionHandler = Handler(Looper.getMainLooper())
+    private val interactionResetRunnable = Runnable { isUserInteracting = false }
+    private val interactionDebounceMs = 500L
 
     fun loadMarkers(context: Context) {
         if (businessMarkerBitmap == null) {
@@ -52,7 +70,9 @@ class MapManager {
         businessAnnotationManager = annotationApi.createPointAnnotationManager()
         // Created second so that the new business pin is drawn above business markers
         newBusinessAnnotationManager = annotationApi.createPointAnnotationManager()
-        // Created third so that the draggable business pin is drawn above all other markers
+        // Created third so that the location puck is drawn above business/new-business markers but below the draggable marker
+        locationPuckAnnotationManager = annotationApi.createPointAnnotationManager()
+        // Created fourth so that the draggable business pin is drawn above all other markers
         draggableBusinessAnnotationManager = annotationApi.createPointAnnotationManager()
         businessAnnotationManager?.addClickListener { annotation ->
             val annotationData = annotation.getData()
@@ -79,11 +99,16 @@ class MapManager {
         businessAnnotationManager = null
         newBusinessAnnotationManager = null
         newBusinessAnnotation = null
+        locationPuckAnnotationManager = null
+        locationPuckAnnotation = null
+        locationPuckBitmap = null
         draggableBusinessAnnotationManager = null
         draggableBusinessAnnotation = null
         businessMarkerBitmap = null
         isDraggingMarker = false
         originalMarkerPoint = null
+        interactionHandler.removeCallbacks(interactionResetRunnable)
+        isUserInteracting = false
     }
 
     fun showBusinesses(context: Context, businesses: List<Business>?) {
@@ -222,6 +247,89 @@ class MapManager {
         }
     }
 
+    /**
+     * Registers gesture listeners to track whether the user is actively interacting with the map.
+     * When any gesture fires, isUserInteracting is set to true and a debounce timer resets it
+     * to false after [interactionDebounceMs] of no gesture activity.
+     */
+    fun setupInteractionTracking(mapView: MapView) {
+        val markInteracting = {
+            isUserInteracting = true
+            interactionHandler.removeCallbacks(interactionResetRunnable)
+            interactionHandler.postDelayed(interactionResetRunnable, interactionDebounceMs)
+        }
+        mapView.gestures.addOnMoveListener(
+            object : com.mapbox.maps.plugin.gestures.OnMoveListener {
+                override fun onMoveBegin(detector: com.mapbox.android.gestures.MoveGestureDetector) { markInteracting() }
+                override fun onMove(detector: com.mapbox.android.gestures.MoveGestureDetector): Boolean { markInteracting(); return false }
+                override fun onMoveEnd(detector: com.mapbox.android.gestures.MoveGestureDetector) { markInteracting() }
+            }
+        )
+        mapView.gestures.addOnScaleListener(
+            object : com.mapbox.maps.plugin.gestures.OnScaleListener {
+                override fun onScaleBegin(detector: com.mapbox.android.gestures.StandardScaleGestureDetector) { markInteracting() }
+                override fun onScale(detector: com.mapbox.android.gestures.StandardScaleGestureDetector) { markInteracting() }
+                override fun onScaleEnd(detector: com.mapbox.android.gestures.StandardScaleGestureDetector) { markInteracting() }
+            }
+        )
+        mapView.gestures.addOnRotateListener(
+            object : com.mapbox.maps.plugin.gestures.OnRotateListener {
+                override fun onRotateBegin(detector: com.mapbox.android.gestures.RotateGestureDetector) { markInteracting() }
+                override fun onRotate(detector: com.mapbox.android.gestures.RotateGestureDetector) { markInteracting() }
+                override fun onRotateEnd(detector: com.mapbox.android.gestures.RotateGestureDetector) { markInteracting() }
+            }
+        )
+    }
 
+    /**
+     * Returns true if the user is currently interacting with the map (panning, zooming, rotating).
+     */
+    fun isUserInteracting(): Boolean = isUserInteracting || isDraggingMarker
+
+    /**
+     * Animates the map camera to center on the given coordinates at a street-level zoom.
+     */
+    fun centerOnLocation(mapView: MapView, latitude: Double, longitude: Double) {
+        val cameraOptions = CameraOptions.Builder()
+            .center(Point.fromLngLat(longitude, latitude))
+            .zoom(15.0)
+            .build()
+        mapView.mapboxMap.easeTo(cameraOptions)
+    }
+
+    private fun loadLocationPuckBitmap(context: Context) {
+        if (locationPuckBitmap == null) {
+            locationPuckBitmap = mapUtils.bitmapFromDrawableRes(context, R.drawable.ic_location_puck)
+        }
+    }
+
+    /**
+     * Shows or updates the location puck at the given coordinates.
+     */
+    fun showLocationPuck(context: Context, latitude: Double, longitude: Double) {
+        loadLocationPuckBitmap(context)
+        val point = Point.fromLngLat(longitude, latitude)
+        if (locationPuckAnnotation != null) {
+            locationPuckAnnotation?.point = point
+            locationPuckAnnotationManager?.update(locationPuckAnnotation!!)
+        } else {
+            val options = PointAnnotationOptions()
+                .withPoint(point)
+                .withIconSize(1.0)
+                .withSymbolSortKey(7.0)
+            locationPuckBitmap?.let { options.withIconImage(it) }
+            locationPuckAnnotation = locationPuckAnnotationManager?.create(options)
+        }
+    }
+
+    /**
+     * Hides the location puck.
+     */
+    fun hideLocationPuck() {
+        locationPuckAnnotation?.let {
+            locationPuckAnnotationManager?.delete(it)
+        }
+        locationPuckAnnotation = null
+    }
 
 }

@@ -1,23 +1,30 @@
 package fr.vpm.changingtables.ui.map
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.compass.compass
 import fr.vpm.changingtables.R
 import fr.vpm.changingtables.databinding.FragmentMapBinding
+import fr.vpm.changingtables.location.UserLocationProvider
 import fr.vpm.changingtables.models.Business
 import fr.vpm.changingtables.viewmodels.BusinessViewModel
+import kotlinx.coroutines.launch
 
 class MapFragment : Fragment() {
 
@@ -29,6 +36,14 @@ class MapFragment : Fragment() {
     private var mapManager = MapManager()
     private lateinit var businessDetailsBottomSheet: BusinessDetailsBottomSheet
     private lateinit var businessFormBottomSheet: BusinessFormBottomSheet
+
+    private val userLocationProvider = UserLocationProvider()
+
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) centerOnUserLocation()
+    }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -106,9 +121,52 @@ class MapFragment : Fragment() {
             businessDetailsBottomSheet.hide()
             businessFormBottomSheet.showNewBusiness(point)
         }
+        mapManager.setupInteractionTracking(binding.mapView)
 
         mapViewModel.visibleBusinesses(businessViewModel.businesses)
             .observe(viewLifecycleOwner, ::onBusinesses)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        centerOnUserLocation()
+    }
+
+    private fun centerOnUserLocation() {
+        if (!userLocationProvider.hasLocationPermission(requireContext())) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                } else {
+                    // Check if permanently denied (don't ask again)
+                    val prefs = requireContext().getSharedPreferences("location_prefs", android.content.Context.MODE_PRIVATE)
+                    val hasAskedBefore = prefs.getBoolean("location_permission_asked", false)
+                    if (hasAskedBefore) {
+                        // Permanently denied — don't ask again
+                        mapManager.hideLocationPuck()
+                        return
+                    }
+                    prefs.edit().putBoolean("location_permission_asked", true).apply()
+                    locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            }
+            return
+        }
+        if (!userLocationProvider.isLocationEnabled(requireContext())) {
+            mapManager.hideLocationPuck()
+            return
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            val location = userLocationProvider.getLocation(requireContext())
+            if (location != null) {
+                mapManager.showLocationPuck(requireContext(), location.latitude, location.longitude)
+                if (!mapManager.isUserInteracting()) {
+                    mapManager.centerOnLocation(binding.mapView, location.latitude, location.longitude)
+                }
+            } else {
+                mapManager.hideLocationPuck()
+            }
+        }
     }
 
     private fun setupFilterChips() {

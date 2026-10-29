@@ -65,6 +65,7 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:supabase-kt:2.3.0")
     implementation("io.github.jan-tennert.supabase:postgrest-kt:2.3.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation(libs.play.services.location)
 
     testImplementation(libs.junit)
     testImplementation(libs.androidx.arch.core.testing)
