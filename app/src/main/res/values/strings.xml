@@ -28,4 +28,12 @@
     <string name="all_skip">Skip</string>
     <string name="amenity_dirty">Dirty</string>
     <string name="amenity_diaper_pail_missing">No Diaper pail</string>
+    <string name="amenity_clean_enough">Clean enough</string>
+    <string name="cleanliness_question">How clean is it?</string>
+    <string name="cleanliness_spotless">Spotless</string>
+    <string name="cleanliness_ok">It\'s ok</string>
+    <string name="cleanliness_needs_cleaning">Needs cleaning</string>
+    <string name="diaper_pail_question">Is there a diaper pail?</string>
+    <string name="extra_note_question">Anything else worth noting?</string>
+    <string name="extra_note_hint">Extra note (optional)</string>
 </resources>

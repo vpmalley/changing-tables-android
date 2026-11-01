@@ -3,7 +3,15 @@ package fr.vpm.changingtables.models
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
+@Serializable
+enum class Cleanliness {
+    @SerialName("spotless") SPOTLESS,
+    @SerialName("ok") OK,
+    @SerialName("needs_cleaning") NEEDS_CLEANING
+}
 
 @Serializable
 @Entity(tableName = "businesses")
@@ -45,8 +53,11 @@ class Business {
     @JvmField
     var hasDiaperPail: Boolean = false
 
+    /**
+     * Null when the user did not answer the cleanliness question.
+     */
     @JvmField
-    var isClean: Boolean = false
+    var cleanliness: Cleanliness? = null
 
     @JvmField
     var rating: Int = -1
@@ -65,7 +76,7 @@ class Business {
         get() = if (rating < 0) 0f else rating.toFloat()
 
     override fun toString(): String {
-        return "Business(id=$id, name=$name, type=$type, description=$description, longitude=$longitude, latitude=$latitude, hasChangingTable=$hasChangingTable, changingTableLocation=$changingTableLocation, hasDiaperPail=$hasDiaperPail, isClean=$isClean, rating=$rating, area=$area, photoUrls=$photoUrls, savedOnDevice=$savedOnDevice, ratingAsFloat=$ratingAsFloat)"
+        return "Business(id=$id, name=$name, type=$type, description=$description, longitude=$longitude, latitude=$latitude, hasChangingTable=$hasChangingTable, changingTableLocation=$changingTableLocation, hasDiaperPail=$hasDiaperPail, cleanliness=$cleanliness, rating=$rating, area=$area, photoUrls=$photoUrls, savedOnDevice=$savedOnDevice, ratingAsFloat=$ratingAsFloat)"
     }
 
 }

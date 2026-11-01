@@ -15,6 +15,7 @@ import com.mapbox.geojson.Point
 import fr.vpm.changingtables.R
 import fr.vpm.changingtables.databinding.BusinessFormBottomSheetBinding
 import fr.vpm.changingtables.models.Business
+import fr.vpm.changingtables.models.Cleanliness
 import fr.vpm.changingtables.models.Option
 import fr.vpm.changingtables.models.Question
 import fr.vpm.changingtables.viewmodels.BusinessViewModel
@@ -138,18 +139,47 @@ class BusinessFormBottomSheet(
             singleChoice = false
             chipStyleRes = com.google.android.material.R.style.Widget_Material3_Chip_Filter
         }
-        questions = listOf(changingTableQuestion, changingTableLocationQuestion)
+        val cleanlinessQuestion = Question().apply {
+            titleResId = R.string.cleanliness_question
+            options = listOf(
+                Option("spotless", R.string.cleanliness_spotless),
+                Option("ok", R.string.cleanliness_ok),
+                Option("needs_cleaning", R.string.cleanliness_needs_cleaning)
+            )
+            singleChoice = true
+            chipStyleRes = com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
+        }
+        val diaperPailQuestion = Question().apply {
+            titleResId = R.string.diaper_pail_question
+            options = listOf(
+                Option("yes", R.string.all_yes),
+                Option("no", R.string.all_no)
+            )
+            singleChoice = true
+            chipStyleRes = com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
+        }
+        val extraNoteQuestion = Question().apply {
+            titleResId = R.string.extra_note_question
+            inputType = Question.InputType.FREE_TEXT
+        }
+        questions = listOf(
+            changingTableQuestion,
+            changingTableLocationQuestion,
+            cleanlinessQuestion,
+            diaperPailQuestion,
+            extraNoteQuestion
+        )
         answers.clear()
 
         questionsAdapter = QuestionsAdapter(
             questions = questions,
-            onChipSelected = { position, _, selectedTexts, tags ->
-                answers[position] = selectedTexts
+            onChipSelected = { position, _, _, tags ->
+                answers[position] = tags.filterNotNull()
                 binding.addBusinessButton.isEnabled = true
-                if (position == 0) {
-                    if (tags.any { it == "yes" }) {
-                        binding.questionsViewPager.currentItem = 1
-                    }
+                // Auto-advance on any single-choice answer; multi-choice questions
+                // (changing table location) stay until the user taps Skip/Back
+                if (questions[position].singleChoice && position < questions.size - 1) {
+                    binding.questionsViewPager.currentItem = position + 1
                 }
             },
             onBackClick = { position ->
@@ -160,6 +190,13 @@ class BusinessFormBottomSheet(
             onSkipClick = { position ->
                 if (position < questions.size - 1) {
                     binding.questionsViewPager.currentItem = position + 1
+                }
+            },
+            onTextChanged = { position, text ->
+                if (text.isBlank()) {
+                    answers.remove(position)
+                } else {
+                    answers[position] = listOf(text)
                 }
             }
         )
@@ -184,6 +221,10 @@ class BusinessFormBottomSheet(
 
                 hasChangingTable = answers[0]?.firstOrNull()
                 changingTableLocation = answers[1]?.firstOrNull()
+                cleanliness = answers[2]?.firstOrNull()
+                    ?.let { key -> runCatching { Cleanliness.valueOf(key.uppercase()) }.getOrNull() }
+                hasDiaperPail = answers[3]?.firstOrNull() == "yes"
+                description = answers[4]?.firstOrNull()
             }
             businessViewModel.addBusiness(newBusiness)
             val businessName = newBusiness.name ?: "New business"

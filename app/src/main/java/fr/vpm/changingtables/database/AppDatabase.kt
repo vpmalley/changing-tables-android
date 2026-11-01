@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import fr.vpm.changingtables.models.Business
 import java.util.concurrent.Executors
 
-@Database(entities = [Business::class], version = 4, exportSchema = false)
+@Database(entities = [Business::class], version = 5, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun businessDao(): BusinessDao
@@ -40,7 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
 //                                        hasChangingTable = "yes"
 //                                        changingTableLocation = "accessible"
 //                                        hasDiaperPail = true
-//                                        isClean = true
+//                                        cleanliness = Cleanliness.SPOTLESS
 //                                        rating = 4
 //                                        photoUrls = emptyList()
 //                                    }

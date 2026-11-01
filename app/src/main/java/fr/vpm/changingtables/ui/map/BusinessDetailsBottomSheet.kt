@@ -5,8 +5,6 @@ import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.widget.TextViewCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -100,26 +98,15 @@ class BusinessDetailsBottomSheet(
 
         business?.let {
             binding.amenitiesCard.visibility = View.VISIBLE
-//            displayAmenity(binding.amenityChangingTable, it.hasChangingTable != "no")
-//            displayAmenity(binding.amenityClean, it.isClean)
-//            displayAmenity(binding.amenityDiaperPail, it.hasDiaperPail)
             binding.amenities.setBusinessType(it.type)
             binding.amenities.setAmenities(
-                listOf(
+                listOfNotNull(
                     AmenityDisplay.fromAmenity(
                         R.string.amenity_changing_table,
                         it.hasChangingTable != "no",
                         true
                     ),
-                    AmenityDisplay.fromAmenity(
-                        if (it.isClean) {
-                            R.string.amenity_clean
-                        } else {
-                            R.string.amenity_dirty
-                        },
-                        it.isClean,
-                        true
-                    ),
+                    AmenityDisplay.fromCleanliness(it.cleanliness),
                     AmenityDisplay.fromAmenity(
                         if (it.hasDiaperPail) {
                             R.string.amenity_diaper_pail
@@ -130,23 +117,6 @@ class BusinessDetailsBottomSheet(
                         false
                     )
                 )
-            )
-        }
-    }
-
-    private fun displayAmenity(
-        view: com.google.android.material.textview.MaterialTextView?,
-        isAvailable: Boolean
-    ) {
-        view?.let {
-            it.visibility = View.VISIBLE
-            val iconRes = if (isAvailable) R.drawable.ic_check_24 else R.drawable.ic_close_24
-            it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
-            val colorRes =
-                if (isAvailable) R.color.green else R.color.onContainerOrange
-            TextViewCompat.setCompoundDrawableTintList(
-                it,
-                ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
             )
         }
     }

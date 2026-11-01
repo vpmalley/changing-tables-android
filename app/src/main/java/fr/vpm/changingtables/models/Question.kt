@@ -18,4 +18,14 @@ class Question {
     var singleChoice: Boolean = false
     var chipStyleRes: Int = com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
 
+    /**
+     * CHIPS renders option chips; FREE_TEXT renders a text input (options ignored).
+     */
+    var inputType: InputType = InputType.CHIPS
+
+    enum class InputType {
+        CHIPS,
+        FREE_TEXT
+    }
+
 }

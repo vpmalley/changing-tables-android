@@ -1,6 +1,7 @@
 package fr.vpm.changingtables.persistence
 
 import fr.vpm.changingtables.models.Business
+import fr.vpm.changingtables.models.Cleanliness
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -29,7 +30,7 @@ class BusinessJsonStoreTest {
             hasChangingTable = "yes"
             changingTableLocation = "accessible"
             hasDiaperPail = true
-            isClean = true
+            cleanliness = Cleanliness.OK
             rating = 5
             area = "downtown"
             photoUrls = listOf("https://example.com/1.jpg", "https://example.com/2.jpg")
@@ -51,8 +52,10 @@ class BusinessJsonStoreTest {
         assertEquals("yes", result.hasChangingTable)
         assertEquals("accessible", result.changingTableLocation)
         assertTrue(result.hasDiaperPail)
-        assertTrue(result.isClean)
+        assertEquals(Cleanliness.OK, result.cleanliness)
         assertEquals(5, result.rating)
+        // Enum serializes with its lowercase @SerialName value
+        assertTrue(file.readText().contains("\"cleanliness\":\"ok\""))
         assertEquals("downtown", result.area)
         assertEquals(listOf("https://example.com/1.jpg", "https://example.com/2.jpg"), result.photoUrls)
         assertEquals(1234567890L, result.savedOnDevice)
@@ -111,6 +114,8 @@ class BusinessJsonStoreTest {
         assertEquals(1, result!!.size)
         assertEquals("Cafe", result[0].name)
         assertEquals(3, result[0].rating)
+        // Legacy "isClean" key is ignored and missing "cleanliness" defaults to null
+        assertNull(result[0].cleanliness)
     }
 
     @Test
@@ -141,7 +146,7 @@ class BusinessJsonStoreTest {
         assertNull(business.hasChangingTable)
         assertNull(business.changingTableLocation)
         assertEquals(false, business.hasDiaperPail)
-        assertEquals(false, business.isClean)
+        assertNull(business.cleanliness)
         assertEquals(-1, business.rating)
         assertNull(business.area)
         assertTrue(business.photoUrls.isEmpty())
@@ -187,5 +192,39 @@ class BusinessJsonStoreTest {
         val result = store.loadFromFile(file)
         assertNotNull(result)
         assertTrue(result!!.isEmpty())
+    }
+
+    @Test
+    fun loadFromFile_legacyExportWithIsCleanAndNoCleanliness_loadsWithNullCleanliness() {
+        val file = tempFolder.newFile("businesses.json")
+        // Export written before the cleanliness enum existed
+        file.writeText(
+            """
+            [
+                {
+                    "id": 3,
+                    "name": "Legacy Place",
+                    "type": "restaurant",
+                    "description": null,
+                    "longitude": 1.5,
+                    "latitude": 2.5,
+                    "hasChangingTable": "yes",
+                    "changingTableLocation": "female",
+                    "hasDiaperPail": true,
+                    "isClean": true,
+                    "rating": 4,
+                    "area": null,
+                    "photoUrls": [],
+                    "savedOnDevice": null
+                }
+            ]
+            """.trimIndent()
+        )
+        val result = store.loadFromFile(file)
+        assertNotNull(result)
+        assertEquals(1, result!!.size)
+        assertEquals("Legacy Place", result[0].name)
+        assertNull(result[0].cleanliness)
+        assertTrue(result[0].hasDiaperPail)
     }
 }
