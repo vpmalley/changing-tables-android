@@ -21,7 +21,7 @@ data class AmenityDisplay(
             return if (hasAmenity) {
                 AmenityDisplay(amenityTextResId, R.color.green)
             } else if (isImportant) {
-                AmenityDisplay(amenityTextResId, android.R.color.holo_red_dark)
+                AmenityDisplay(amenityTextResId, R.color.palette_red)
             } else {
                 AmenityDisplay(amenityTextResId, android.R.color.darker_gray)
             }
@@ -35,7 +35,7 @@ data class AmenityDisplay(
             return when (cleanliness) {
                 Cleanliness.SPOTLESS -> AmenityDisplay(R.string.amenity_clean, R.color.green)
                 Cleanliness.OK -> AmenityDisplay(R.string.amenity_clean_enough, R.color.clean_enough_yellow)
-                Cleanliness.NEEDS_CLEANING -> AmenityDisplay(R.string.amenity_dirty, android.R.color.holo_red_dark)
+                Cleanliness.NEEDS_CLEANING -> AmenityDisplay(R.string.amenity_dirty, R.color.palette_red)
                 null -> null
             }
         }

@@ -102,7 +102,11 @@ class BusinessDetailsBottomSheet(
             binding.amenities.setAmenities(
                 listOfNotNull(
                     AmenityDisplay.fromAmenity(
-                        R.string.amenity_changing_table,
+                        if (it.hasChangingTable == "no") {
+                            R.string.amenity_changing_table_missing
+                        } else {
+                            R.string.amenity_changing_table
+                        },
                         it.hasChangingTable != "no",
                         true
                     ),

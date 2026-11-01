@@ -73,6 +73,17 @@ When a saved business is displayed, its cleanliness status SHALL be shown as a c
 - **WHEN** a business with a null cleanliness value is displayed
 - **THEN** no cleanliness chip is shown
 
+### Requirement: Changing table absence displayed clearly
+When a saved business is displayed and it has no changing table (`hasChangingTable` is `no`), the amenities SHALL show a "No changing table" chip with a red background that is a lighter red, not a dark red. When the business has a changing table, the chip SHALL show "Changing table" with a green background.
+
+#### Scenario: Business without changing table shows explicit wording
+- **WHEN** a business with `hasChangingTable` = `no` is displayed
+- **THEN** a "No changing table" chip with a lighter red background is shown
+
+#### Scenario: Business with changing table unchanged
+- **WHEN** a business with `hasChangingTable` = `yes` is displayed
+- **THEN** a "Changing table" chip with a green background is shown
+
 ### Requirement: Navigation across all questions
 The form SHALL present the five questions as ordered pages. The user SHALL be able to go back to previous questions and skip forward past any question. The last page SHALL NOT show a skip button.
 

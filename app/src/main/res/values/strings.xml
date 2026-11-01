@@ -21,6 +21,7 @@
     <string name="restaurant">Restaurant</string>
     <string name="activity">Activity</string>
     <string name="amenity_changing_table">Changing table</string>
+    <string name="amenity_changing_table_missing">No changing table</string>
     <string name="amenity_clean">Clean</string>
     <string name="amenity_diaper_pail">Diaper pail</string>
     <string name="summary">Summary</string>
