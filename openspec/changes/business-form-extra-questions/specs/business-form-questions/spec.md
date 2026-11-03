@@ -44,7 +44,7 @@ After the diaper pail question, the new-business form SHALL show a free-text pag
 - **THEN** the form submits successfully and no note is stored
 
 ### Requirement: Answers persisted on the business
-When the user taps "Add business", the form SHALL save the answers onto the new business: the cleanliness choice SHALL be stored as one of `spotless`, `ok`, or `needs_cleaning` (null when the question was skipped), the diaper pail choice SHALL be stored as a boolean, and the extra note SHALL be stored as the business description.
+When the user taps "Add business", the form SHALL save the answers onto the new business: the cleanliness choice SHALL be stored as one of `spotless`, `ok`, or `needs_cleaning` (null when the question was skipped), the diaper pail choice SHALL be stored as `true` for Yes, `false` for No, or null when the question was skipped, and the extra note SHALL be stored as the business description.
 
 #### Scenario: All questions answered
 - **WHEN** the user answers every question and taps "Add business"
@@ -52,7 +52,7 @@ When the user taps "Add business", the form SHALL save the answers onto the new 
 
 #### Scenario: Some questions skipped
 - **WHEN** the user skips one or more of the new questions and taps "Add business"
-- **THEN** the saved business stores a null cleanliness, false diaper pail, and null description for the skipped answers, and the app does not crash
+- **THEN** the saved business stores a null cleanliness, null diaper pail, and null description for the skipped answers, and the app does not crash
 
 ### Requirement: Cleanliness status displayed on business details
 When a saved business is displayed, its cleanliness status SHALL be shown as a colored chip: `spotless` SHALL display as "Clean" with a green background, `ok` SHALL display as "Clean enough" with a yellow background, and `needs_cleaning` SHALL display as "Dirty" with a red background. A business with no cleanliness value SHALL NOT show a cleanliness chip.
@@ -83,6 +83,21 @@ When a saved business is displayed and it has no changing table (`hasChangingTab
 #### Scenario: Business with changing table unchanged
 - **WHEN** a business with `hasChangingTable` = `yes` is displayed
 - **THEN** a "Changing table" chip with a green background is shown
+
+### Requirement: Diaper pail chip only shown when answered
+When a saved business is displayed, its diaper pail status SHALL be shown as a chip only when the question was answered: `true` SHALL display as "Diaper pail" with a green background, `false` SHALL display as "No Diaper pail" with a grey background, and a null (unanswered) value SHALL NOT show any diaper pail chip.
+
+#### Scenario: Diaper pail answered yes
+- **WHEN** a business with `hasDiaperPail` = `true` is displayed
+- **THEN** a "Diaper pail" chip with a green background is shown
+
+#### Scenario: Diaper pail answered no
+- **WHEN** a business with `hasDiaperPail` = `false` is displayed
+- **THEN** a "No Diaper pail" chip with a grey background is shown
+
+#### Scenario: Diaper pail not answered
+- **WHEN** a business with a null `hasDiaperPail` is displayed
+- **THEN** no diaper pail chip is shown
 
 ### Requirement: Navigation across all questions
 The form SHALL present the five questions as ordered pages. The user SHALL be able to go back to previous questions and skip forward past any question. The last page SHALL NOT show a skip button.

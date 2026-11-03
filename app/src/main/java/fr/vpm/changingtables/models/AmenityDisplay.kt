@@ -39,5 +39,17 @@ data class AmenityDisplay(
                 null -> null
             }
         }
+
+        /**
+         * Maps a diaper pail answer to its chip. Returns null when the question was
+         * not answered, in which case no diaper pail chip is shown.
+         */
+        fun fromDiaperPail(hasDiaperPail: Boolean?): AmenityDisplay? {
+            return when (hasDiaperPail) {
+                true -> AmenityDisplay(R.string.amenity_diaper_pail, R.color.green)
+                false -> AmenityDisplay(R.string.amenity_diaper_pail_missing, android.R.color.darker_gray)
+                null -> null
+            }
+        }
     }
 }

@@ -111,15 +111,7 @@ class BusinessDetailsBottomSheet(
                         true
                     ),
                     AmenityDisplay.fromCleanliness(it.cleanliness),
-                    AmenityDisplay.fromAmenity(
-                        if (it.hasDiaperPail) {
-                            R.string.amenity_diaper_pail
-                        } else {
-                            R.string.amenity_diaper_pail_missing
-                        },
-                        it.hasDiaperPail,
-                        false
-                    )
+                    AmenityDisplay.fromDiaperPail(it.hasDiaperPail)
                 )
             )
         }

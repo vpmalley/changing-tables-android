@@ -50,8 +50,11 @@ class Business {
     @JvmField
     var changingTableLocation: String? = null
 
+    /**
+     * Null when the user did not answer the diaper pail question.
+     */
     @JvmField
-    var hasDiaperPail: Boolean = false
+    var hasDiaperPail: Boolean? = null
 
     /**
      * Null when the user did not answer the cleanliness question.

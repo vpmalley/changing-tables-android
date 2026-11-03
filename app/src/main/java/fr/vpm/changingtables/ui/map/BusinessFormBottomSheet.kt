@@ -223,7 +223,11 @@ class BusinessFormBottomSheet(
                 changingTableLocation = answers[1]?.firstOrNull()
                 cleanliness = answers[2]?.firstOrNull()
                     ?.let { key -> runCatching { Cleanliness.valueOf(key.uppercase()) }.getOrNull() }
-                hasDiaperPail = answers[3]?.firstOrNull() == "yes"
+                hasDiaperPail = when (answers[3]?.firstOrNull()) {
+                    "yes" -> true
+                    "no" -> false
+                    else -> null
+                }
                 description = answers[4]?.firstOrNull()
             }
             businessViewModel.addBusiness(newBusiness)

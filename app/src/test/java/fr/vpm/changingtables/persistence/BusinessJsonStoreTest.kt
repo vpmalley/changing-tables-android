@@ -51,7 +51,7 @@ class BusinessJsonStoreTest {
         assertEquals(49.789, result.latitude, 0.0001)
         assertEquals("yes", result.hasChangingTable)
         assertEquals("accessible", result.changingTableLocation)
-        assertTrue(result.hasDiaperPail)
+        assertEquals(true, result.hasDiaperPail)
         assertEquals(Cleanliness.OK, result.cleanliness)
         assertEquals(5, result.rating)
         // Enum serializes with its lowercase @SerialName value
@@ -116,6 +116,8 @@ class BusinessJsonStoreTest {
         assertEquals(3, result[0].rating)
         // Legacy "isClean" key is ignored and missing "cleanliness" defaults to null
         assertNull(result[0].cleanliness)
+        // Explicit false in JSON still loads as false (not null)
+        assertEquals(false, result[0].hasDiaperPail)
     }
 
     @Test
@@ -145,7 +147,7 @@ class BusinessJsonStoreTest {
         assertEquals(0.0, business.latitude, 0.0001)
         assertNull(business.hasChangingTable)
         assertNull(business.changingTableLocation)
-        assertEquals(false, business.hasDiaperPail)
+        assertNull(business.hasDiaperPail)
         assertNull(business.cleanliness)
         assertEquals(-1, business.rating)
         assertNull(business.area)
@@ -225,6 +227,6 @@ class BusinessJsonStoreTest {
         assertEquals(1, result!!.size)
         assertEquals("Legacy Place", result[0].name)
         assertNull(result[0].cleanliness)
-        assertTrue(result[0].hasDiaperPail)
+        assertEquals(true, result[0].hasDiaperPail)
     }
 }
