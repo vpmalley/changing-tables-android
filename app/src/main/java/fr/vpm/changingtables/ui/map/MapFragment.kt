@@ -17,6 +17,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.compass.compass
 import fr.vpm.changingtables.R
@@ -38,6 +39,10 @@ class MapFragment : Fragment() {
     private lateinit var businessFormBottomSheet: BusinessFormBottomSheet
 
     private val userLocationProvider = UserLocationProvider()
+
+    // Last fix obtained from the location provider, used to place the new-business
+    // marker where the user is when the location is known
+    private var lastKnownUserLocation: android.location.Location? = null
 
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -145,6 +150,7 @@ class MapFragment : Fragment() {
 
     private fun centerOnUserLocation() {
         if (!userLocationProvider.hasLocationPermission(requireContext())) {
+            lastKnownUserLocation = null
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                     locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -164,11 +170,13 @@ class MapFragment : Fragment() {
             return
         }
         if (!userLocationProvider.isLocationEnabled(requireContext())) {
+            lastKnownUserLocation = null
             mapManager.hideLocationPuck()
             return
         }
         viewLifecycleOwner.lifecycleScope.launch {
             val location = userLocationProvider.getLocation(requireContext())
+            lastKnownUserLocation = location
             if (location != null) {
                 mapManager.showLocationPuck(requireContext(), location.latitude, location.longitude)
                 if (!mapManager.isUserInteracting()) {
@@ -236,11 +244,18 @@ class MapFragment : Fragment() {
         binding.fabAddBusiness.setOnClickListener {
             // Clear any existing new business markers
             mapManager.clearNewBusinessMarker()
-            
-            // Create a draggable marker at the map center
+
+            // Place the marker where the user is when the location is known,
+            // otherwise at the map center
+            val initialPoint = lastKnownUserLocation?.let { location ->
+                Point.fromLngLat(location.longitude, location.latitude)
+            }
+
+            // Create a draggable marker at the user location (or map center)
             mapManager.createDraggableMarker(
                 requireContext(),
                 binding.mapView,
+                initialPoint = initialPoint,
                 onDrop = { point ->
                     // When the user drops the marker, show the business form
                     businessDetailsBottomSheet.hide()

@@ -154,17 +154,21 @@ class MapManager {
     fun createDraggableMarker(
         context: Context,
         mapView: MapView,
+        initialPoint: Point? = null,
         onDrop: (point: Point) -> Unit,
         onCancel: () -> Unit
     ) {
         // Clear any existing draggable marker
         clearDraggableMarker()
-        
+
         loadMarkers(context)
-        
-        // Get the current camera center
-        val cameraState = mapView.mapboxMap.cameraState
-        val centerPoint = Point.fromLngLat(cameraState.center.longitude(), cameraState.center.latitude())
+
+        // Place the marker at the given point (e.g. the user's location),
+        // or at the current camera center when no point is provided
+        val centerPoint = initialPoint ?: run {
+            val cameraState = mapView.mapboxMap.cameraState
+            Point.fromLngLat(cameraState.center.longitude(), cameraState.center.latitude())
+        }
         
         // Store original position to detect if marker was moved
         originalMarkerPoint = centerPoint
