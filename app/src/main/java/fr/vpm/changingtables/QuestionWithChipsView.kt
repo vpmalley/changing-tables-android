@@ -58,6 +58,14 @@ class QuestionWithChipsView @JvmOverloads constructor(
         binding.chipSelectionGroup.setOnCheckedStateChangeListener { group, checkedIds ->
             val selectedTexts = checkedIds.map { group.findViewById<Chip>(it).text.toString() }
             val selectedTags = checkedIds.map { group.findViewById<Chip>(it).tag as? String }
+            // "Next" only on multi-option questions with a selection; otherwise "Skip"
+            binding.skipButton.setText(
+                if (!binding.chipSelectionGroup.isSingleSelection && checkedIds.isNotEmpty()) {
+                    R.string.all_next
+                } else {
+                    R.string.all_skip
+                }
+            )
             // Invoke the public listener
             selectionListener?.invoke(checkedIds, selectedTexts, selectedTags)
         }

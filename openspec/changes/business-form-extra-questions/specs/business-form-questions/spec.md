@@ -125,6 +125,42 @@ When the user selects an option on a single-choice question, the form SHALL auto
 - **WHEN** the user selects one or more options on the changing-table location question
 - **THEN** the form stays on that question until the user taps Skip or Back
 
+### Requirement: Question options on a single line
+All option chips of a question SHALL be laid out on a single horizontal line (scrollable horizontally when they do not fit), so that every chip-based question card has the same height regardless of how many options the question has.
+
+#### Scenario: Questions with different option counts have equal card height
+- **WHEN** the user navigates between questions with 2, 3, and 5 options
+- **THEN** every chip-based question card occupies the same height, with all options on one line
+
+### Requirement: Add business button below the question card
+The "Add business" button SHALL be positioned directly below the question card in the new-business form.
+
+#### Scenario: Button placement
+- **WHEN** the new-business form is displayed
+- **THEN** the "Add business" button appears directly below the question card
+
+### Requirement: Skip button reads Next only on multi-option questions with a selection
+On a question that allows multiple options, when at least one option is already selected, the skip button SHALL read "Next". On single-choice questions (where only one option can be selected), or when no option is selected, the skip button SHALL read "Skip".
+
+#### Scenario: Selection on a multi-option question turns Skip into Next
+- **WHEN** the user selects one or more options on a multi-option question (e.g. the changing-table location question)
+- **THEN** the skip button reads "Next"
+
+#### Scenario: Single-choice question keeps Skip even with a selection
+- **WHEN** an option is selected on a single-choice question
+- **THEN** the skip button still reads "Skip"
+
+#### Scenario: No selection keeps Skip
+- **WHEN** no option is selected on a question
+- **THEN** the skip button reads "Skip"
+
+### Requirement: Compact extra note field
+The free-text extra note input SHALL be a single-line-height field by default, so the note question card is not taller than the chip question cards.
+
+#### Scenario: Note card matches chip card height
+- **WHEN** the user reaches the extra note page
+- **THEN** the note input is one line high by default and the card height matches the chip question cards
+
 ### Requirement: Stored data remains loadable after the schema change
 Businesses stored before the cleanliness field existed SHALL remain loadable from the JSON export file, and the database SHALL remain readable after the schema change, without crashing the app.
 
