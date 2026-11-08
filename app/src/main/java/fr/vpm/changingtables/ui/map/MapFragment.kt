@@ -123,8 +123,19 @@ class MapFragment : Fragment() {
         }
         mapManager.setupInteractionTracking(binding.mapView)
 
+        // Reopen the business form with the previously entered data after a
+        // configuration change (e.g. screen rotation)
+        businessFormBottomSheet.restoreInstanceState(savedInstanceState)
+
         mapViewModel.visibleBusinesses(businessViewModel.businesses)
             .observe(viewLifecycleOwner, ::onBusinesses)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (::businessFormBottomSheet.isInitialized) {
+            businessFormBottomSheet.onSaveInstanceState(outState)
+        }
     }
 
     override fun onResume() {

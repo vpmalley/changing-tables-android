@@ -18,6 +18,7 @@ class QuestionsAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val currentTexts = mutableMapOf<Int, String>()
+    private var selectedTags: Map<Int, List<String>> = emptyMap()
 
     companion object {
         private const val VIEW_TYPE_CHIPS = 0
@@ -32,6 +33,7 @@ class QuestionsAdapter(
                 question,
                 question.chipStyleRes
             )
+            binding.questionView.setSelectedTags(selectedTags[position] ?: emptyList())
             binding.questionView.setOnChipSelectedListener { selectedChipIds, selectedChipTexts, selectedChipTags ->
                 onChipSelected(position, selectedChipIds, selectedChipTexts, selectedChipTags)
             }
@@ -90,6 +92,20 @@ class QuestionsAdapter(
 
     fun updateQuestions(newQuestions: List<Question>) {
         questions = newQuestions
+        notifyDataSetChanged()
+    }
+
+    /**
+     * Restores previously given answers (e.g. after a configuration change) so the
+     * chips and the free-text input show the selections again on rebind.
+     */
+    fun setSelectedAnswers(answers: Map<Int, List<String>>) {
+        selectedTags = answers
+        answers.forEach { (position, tags) ->
+            if (questions.getOrNull(position)?.inputType == Question.InputType.FREE_TEXT) {
+                currentTexts[position] = tags.firstOrNull() ?: ""
+            }
+        }
         notifyDataSetChanged()
     }
 }

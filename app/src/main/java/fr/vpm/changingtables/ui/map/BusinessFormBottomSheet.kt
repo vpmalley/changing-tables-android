@@ -2,9 +2,12 @@ package fr.vpm.changingtables.ui.map
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.BundleCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
@@ -16,6 +19,7 @@ import fr.vpm.changingtables.R
 import fr.vpm.changingtables.databinding.BusinessFormBottomSheetBinding
 import fr.vpm.changingtables.models.Business
 import fr.vpm.changingtables.models.Cleanliness
+import fr.vpm.changingtables.models.HighChairAvailability
 import fr.vpm.changingtables.models.Option
 import fr.vpm.changingtables.models.Question
 import fr.vpm.changingtables.viewmodels.BusinessViewModel
@@ -32,8 +36,19 @@ class BusinessFormBottomSheet(
     private val answers = mutableMapOf<Int, List<String>>()
 
     private var selectedType: String? = null
+    private var newBusinessPoint: Point? = null
     private lateinit var backgroundDrawable: MaterialShapeDrawable
     private var cornerRadius: Float = 0f
+
+    companion object {
+        private const val KEY_FORM_VISIBLE = "form_visible"
+        private const val KEY_FORM_POINT_LAT = "form_point_lat"
+        private const val KEY_FORM_POINT_LON = "form_point_lon"
+        private const val KEY_FORM_TYPE = "form_type"
+        private const val KEY_FORM_NAME = "form_name"
+        private const val KEY_FORM_ANSWERS = "form_answers"
+        private const val KEY_FORM_PAGE = "form_page"
+    }
 
     fun setupBottomSheet() {
         val bottomSheetLayout = binding.businessFormLayout
@@ -86,9 +101,20 @@ class BusinessFormBottomSheet(
                 }
             }
         })
+
+        binding.questionsViewPager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if (::questionsAdapter.isInitialized) {
+                    questionsAdapter.notifyDataSetChanged()
+                }
+            }
+        })
     }
 
     fun showNewBusiness(point: Point) {
+        newBusinessPoint = point
         mapManager.clearNewBusinessMarker()
         mapManager.showNewBusinessMarker(context, point)
         binding.businessFormLayout.visibility = View.VISIBLE
@@ -158,6 +184,16 @@ class BusinessFormBottomSheet(
             singleChoice = true
             chipStyleRes = com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
         }
+        val highChairQuestion = Question().apply {
+            titleResId = R.string.high_chair_question
+            options = listOf(
+                Option("multiple", R.string.high_chair_multiple),
+                Option("single", R.string.high_chair_single),
+                Option("none", R.string.high_chair_none)
+            )
+            singleChoice = true
+            chipStyleRes = com.google.android.material.R.style.Widget_Material3_Chip_Suggestion
+        }
         val extraNoteQuestion = Question().apply {
             titleResId = R.string.extra_note_question
             inputType = Question.InputType.FREE_TEXT
@@ -167,6 +203,7 @@ class BusinessFormBottomSheet(
             changingTableLocationQuestion,
             cleanlinessQuestion,
             diaperPailQuestion,
+            highChairQuestion,
             extraNoteQuestion
         )
         answers.clear()
@@ -201,17 +238,21 @@ class BusinessFormBottomSheet(
             }
         )
 
+        // ViewPager2 keeps the inner RecyclerView's scroll anchor when the adapter is
+        // swapped, so a form left on the last question would reopen on that question.
+        // Reset to the first page while the old adapter is still attached (after the swap
+        // currentItem is already 0 and setCurrentItem would be a no-op).
+        if (binding.questionsViewPager.adapter != null) {
+            binding.questionsViewPager.setCurrentItem(0, false)
+        }
         binding.questionsViewPager.adapter = questionsAdapter
         binding.questionsViewPager.isUserInputEnabled = false
-        binding.questionsViewPager.registerOnPageChangeCallback(object :
-            ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                questionsAdapter.notifyDataSetChanged()
-            }
-        })
 
         binding.addBusinessButton.setOnClickListener {
+            // The last question can be a free-text input, so the keyboard may be open
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+
             val newBusiness = Business().apply {
                 name = binding.businessTitleNew.editText?.text?.toString()
                 longitude = point.longitude()
@@ -228,7 +269,9 @@ class BusinessFormBottomSheet(
                     "no" -> false
                     else -> null
                 }
-                description = answers[4]?.firstOrNull()
+                highChairs = answers[4]?.firstOrNull()
+                    ?.let { key -> runCatching { HighChairAvailability.valueOf(key.uppercase()) }.getOrNull() }
+                description = answers[5]?.firstOrNull()
             }
             businessViewModel.addBusiness(newBusiness)
             val businessName = newBusiness.name ?: "New business"
@@ -237,6 +280,50 @@ class BusinessFormBottomSheet(
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             mapManager.clearNewBusinessMarker()
         }
+    }
+
+    /**
+     * Saves the in-progress business form so it survives configuration changes
+     * (e.g. screen rotation). Writes nothing while the form is hidden.
+     */
+    fun onSaveInstanceState(outState: Bundle) {
+        if (binding.businessFormLayout.visibility != View.VISIBLE) return
+        val point = newBusinessPoint ?: return
+        outState.putBoolean(KEY_FORM_VISIBLE, true)
+        outState.putDouble(KEY_FORM_POINT_LAT, point.latitude())
+        outState.putDouble(KEY_FORM_POINT_LON, point.longitude())
+        outState.putString(KEY_FORM_TYPE, selectedType)
+        outState.putString(KEY_FORM_NAME, binding.businessTitleNew.editText?.text?.toString())
+        outState.putSerializable(KEY_FORM_ANSWERS, HashMap(answers))
+        outState.putInt(KEY_FORM_PAGE, binding.questionsViewPager.currentItem)
+    }
+
+    /**
+     * Reopens the form with the data the user had entered before the activity
+     * was destroyed and recreated.
+     */
+    fun restoreInstanceState(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null || !savedInstanceState.getBoolean(KEY_FORM_VISIBLE)) return
+        val latitude = savedInstanceState.getDouble(KEY_FORM_POINT_LAT)
+        val longitude = savedInstanceState.getDouble(KEY_FORM_POINT_LON)
+
+        showNewBusiness(Point.fromLngLat(longitude, latitude))
+
+        selectedType = savedInstanceState.getString(KEY_FORM_TYPE)
+        updateTypeSelectionUI()
+        savedInstanceState.getString(KEY_FORM_NAME)?.let { name ->
+            binding.businessTitleNew.editText?.setText(name)
+        }
+        @Suppress("UNCHECKED_CAST")
+        val savedAnswers = BundleCompat.getSerializable(
+            savedInstanceState, KEY_FORM_ANSWERS, HashMap::class.java
+        ) as? HashMap<Int, List<String>>
+        if (savedAnswers != null) {
+            answers.putAll(savedAnswers)
+            questionsAdapter.setSelectedAnswers(answers)
+        }
+        binding.addBusinessButton.isEnabled = answers.isNotEmpty()
+        binding.questionsViewPager.setCurrentItem(savedInstanceState.getInt(KEY_FORM_PAGE, 0), false)
     }
 
     private fun updateTypeSelectionUI() {

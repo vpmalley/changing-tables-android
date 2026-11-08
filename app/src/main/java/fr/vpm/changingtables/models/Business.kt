@@ -14,6 +14,13 @@ enum class Cleanliness {
 }
 
 @Serializable
+enum class HighChairAvailability {
+    @SerialName("multiple") MULTIPLE,
+    @SerialName("single") SINGLE,
+    @SerialName("none") NONE
+}
+
+@Serializable
 @Entity(tableName = "businesses")
 class Business {
     @PrimaryKey(autoGenerate = true)
@@ -57,6 +64,12 @@ class Business {
     var hasDiaperPail: Boolean? = null
 
     /**
+     * Null when the user did not answer the high chair question.
+     */
+    @JvmField
+    var highChairs: HighChairAvailability? = null
+
+    /**
      * Null when the user did not answer the cleanliness question.
      */
     @JvmField
@@ -79,7 +92,7 @@ class Business {
         get() = if (rating < 0) 0f else rating.toFloat()
 
     override fun toString(): String {
-        return "Business(id=$id, name=$name, type=$type, description=$description, longitude=$longitude, latitude=$latitude, hasChangingTable=$hasChangingTable, changingTableLocation=$changingTableLocation, hasDiaperPail=$hasDiaperPail, cleanliness=$cleanliness, rating=$rating, area=$area, photoUrls=$photoUrls, savedOnDevice=$savedOnDevice, ratingAsFloat=$ratingAsFloat)"
+        return "Business(id=$id, name=$name, type=$type, description=$description, longitude=$longitude, latitude=$latitude, hasChangingTable=$hasChangingTable, changingTableLocation=$changingTableLocation, hasDiaperPail=$hasDiaperPail, cleanliness=$cleanliness, highChairs=$highChairs, rating=$rating, area=$area, photoUrls=$photoUrls, savedOnDevice=$savedOnDevice, ratingAsFloat=$ratingAsFloat)"
     }
 
 }

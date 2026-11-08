@@ -36,6 +36,10 @@
     <string name="cleanliness_ok">It\'s ok</string>
     <string name="cleanliness_needs_cleaning">Needs cleaning</string>
     <string name="diaper_pail_question">Is there a diaper pail?</string>
+    <string name="high_chair_question">Are there high chairs?</string>
+    <string name="high_chair_multiple">Multiple high chairs</string>
+    <string name="high_chair_single">One high chair</string>
+    <string name="high_chair_none">No high chair</string>
     <string name="extra_note_question">Anything else worth noting?</string>
     <string name="extra_note_hint">Extra note (optional)</string>
 </resources>

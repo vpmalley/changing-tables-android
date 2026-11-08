@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import fr.vpm.changingtables.models.Cleanliness
+import fr.vpm.changingtables.models.HighChairAvailability
 
 class Converters {
     companion object {
@@ -15,6 +16,15 @@ class Converters {
         @JvmStatic
         fun toCleanliness(value: String?): Cleanliness? =
             value?.let { v -> runCatching { Cleanliness.valueOf(v) }.getOrNull() }
+
+        @TypeConverter
+        @JvmStatic
+        fun fromHighChairs(highChairs: HighChairAvailability?): String? = highChairs?.name
+
+        @TypeConverter
+        @JvmStatic
+        fun toHighChairs(value: String?): HighChairAvailability? =
+            value?.let { v -> runCatching { HighChairAvailability.valueOf(v) }.getOrNull() }
 
         @TypeConverter
         @JvmStatic

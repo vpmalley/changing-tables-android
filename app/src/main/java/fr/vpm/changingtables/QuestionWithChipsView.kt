@@ -140,6 +140,24 @@ class QuestionWithChipsView @JvmOverloads constructor(
         setChips(question.options, chipStyleRes, question.singleChoice)
     }
 
+    /**
+     * Checks the chips whose tag is in [tags] without notifying the selection listener,
+     * so restoring a selection never looks like a user tap.
+     */
+    fun setSelectedTags(tags: List<String>) {
+        if (tags.isEmpty()) return
+        val listener = selectionListener
+        selectionListener = null
+        binding.chipSelectionGroup.clearCheck()
+        for (index in 0 until binding.chipSelectionGroup.childCount) {
+            val chip = binding.chipSelectionGroup.getChildAt(index) as? Chip ?: continue
+            if (chip.tag in tags) {
+                chip.isChecked = true
+            }
+        }
+        selectionListener = listener
+    }
+
     fun setBackButtonVisibility(visible: Boolean) {
         binding.backButton.visibility = if (visible) VISIBLE else GONE
     }

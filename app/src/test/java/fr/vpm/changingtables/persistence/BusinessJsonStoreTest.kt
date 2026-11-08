@@ -2,6 +2,7 @@ package fr.vpm.changingtables.persistence
 
 import fr.vpm.changingtables.models.Business
 import fr.vpm.changingtables.models.Cleanliness
+import fr.vpm.changingtables.models.HighChairAvailability
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -31,6 +32,7 @@ class BusinessJsonStoreTest {
             changingTableLocation = "accessible"
             hasDiaperPail = true
             cleanliness = Cleanliness.OK
+            highChairs = HighChairAvailability.MULTIPLE
             rating = 5
             area = "downtown"
             photoUrls = listOf("https://example.com/1.jpg", "https://example.com/2.jpg")
@@ -53,9 +55,11 @@ class BusinessJsonStoreTest {
         assertEquals("accessible", result.changingTableLocation)
         assertEquals(true, result.hasDiaperPail)
         assertEquals(Cleanliness.OK, result.cleanliness)
+        assertEquals(HighChairAvailability.MULTIPLE, result.highChairs)
         assertEquals(5, result.rating)
-        // Enum serializes with its lowercase @SerialName value
+        // Enums serialize with their lowercase @SerialName values
         assertTrue(file.readText().contains("\"cleanliness\":\"ok\""))
+        assertTrue(file.readText().contains("\"highChairs\":\"multiple\""))
         assertEquals("downtown", result.area)
         assertEquals(listOf("https://example.com/1.jpg", "https://example.com/2.jpg"), result.photoUrls)
         assertEquals(1234567890L, result.savedOnDevice)
@@ -149,6 +153,7 @@ class BusinessJsonStoreTest {
         assertNull(business.changingTableLocation)
         assertNull(business.hasDiaperPail)
         assertNull(business.cleanliness)
+        assertNull(business.highChairs)
         assertEquals(-1, business.rating)
         assertNull(business.area)
         assertTrue(business.photoUrls.isEmpty())
